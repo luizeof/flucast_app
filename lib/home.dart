@@ -8,12 +8,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget _buildEpisodeRow(Episode __episode) {
-    if (myPodcast.episodes.isNotEmpty) {
+  Widget _buildEpisodeRow(Podcast __podcast, Episode __episode) {
+    if (__podcast.episodes.isNotEmpty) {
       return Card(
           child: ListTile(
               leading: Image(
-                  image: NetworkImage(myPodcast.logoUrl), fit: BoxFit.cover),
+                  image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
               title: Text(
                 __episode.title,
                 softWrap: true,
@@ -45,9 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
           new Image.network(myPodcast.logoUrl),
           new Expanded(
               child: new ListView.builder(
-                  itemCount: episodes.length,
+                  itemCount: myPodcast.episodes.length,
                   itemBuilder: (BuildContext ctxt, int i) {
-                    return _buildEpisodeRow(episodes[i]);
+                    return _buildEpisodeRow(myPodcast, myPodcast.episodes[i]);
                   }))
         ],
       ),
