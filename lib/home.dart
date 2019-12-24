@@ -161,11 +161,10 @@ class _MyHomePageState extends State<MyHomePage>
                         children: [
                           Text(
                             myPodcast.description.toString(),
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 17),
                             strutStyle: StrutStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: 30,
-                              height: 0.75,
+                              fontSize: 34,
+                              height: .65,
                             ),
                           )
                         ]),
