@@ -4,10 +4,7 @@ import 'package:flucast_app/global.dart';
 import 'package:dart_pod/dart_pod.dart';
 
 Future<Podcast> loadPodcast() async {
-
-  print("Carregando...");
   Podcast p = await Podcast.newFromURL(feed_url);
-  print("carregado.");
   return p;
 }
 
