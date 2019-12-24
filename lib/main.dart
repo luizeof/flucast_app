@@ -6,10 +6,9 @@ import 'package:dart_pod/dart_pod.dart';
 void main() async => runApp(FluCastApp());
 
 class FluCastApp extends StatelessWidget {
-
-  void _initPodcast() async {
+  _initPodcast() async {
     myPodcast = await Podcast.newFromURL(feed_url);
-    episodes = myPodcast.episodes;
+    episodes = myPodcast.episodes.toList();
   }
 
   @override
@@ -20,7 +19,11 @@ class FluCastApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: myPodcast.title),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => new MyHomePage(),
+        '/detail': (context) => new MyHomePage(),
+      },
     );
   }
 }
