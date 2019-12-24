@@ -57,14 +57,14 @@ class _MyHomePageState extends State<MyHomePage>
                 ],
               ),
               trailing: Icon(_getEpisodeIcon()),
-              onTap: ()  {
-                setState(()  {
+              onTap: () {
+                setState(() {
                   currentEpisode = __episode;
                   if (_isPlaying == true) {
-                     audioPlayer.stop();
+                    audioPlayer.stop();
                     _isPlaying = false;
                   } else {
-                     audioPlayer.play(__episode.url.toString());
+                    audioPlayer.play(__episode.url.toString());
                     _isPlaying = true;
                   }
                 });
@@ -89,13 +89,13 @@ class _MyHomePageState extends State<MyHomePage>
               ),
               trailing: Icon(Icons.play_circle_outline),
               onTap: () {
-                setState(()  {
+                setState(() {
                   currentEpisode = __episode;
                   if (_isPlaying == true) {
-                     audioPlayer.stop();
+                    audioPlayer.stop();
                     _isPlaying = false;
                   } else {
-                     audioPlayer.play(__episode.url.toString());
+                    audioPlayer.play(__episode.url.toString());
                     _isPlaying = true;
                   }
                 });
