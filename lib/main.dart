@@ -4,6 +4,7 @@ import 'package:flucast_app/global.dart';
 import 'package:dart_pod/dart_pod.dart';
 
 Future<Podcast> loadPodcast() async {
+
   print("Carregando...");
   Podcast p = await Podcast.newFromURL(feed_url);
   print("carregado.");
@@ -12,11 +13,18 @@ Future<Podcast> loadPodcast() async {
 
 void main() async {
   myPodcast = await loadPodcast();
+  if (myPodcast.episodes.isNotEmpty) {
+    currentEpisode = myPodcast.episodes.first;
+  }
   runApp(FluCastApp());
 }
 
-class FluCastApp extends StatelessWidget {
+class FluCastApp extends StatefulWidget {
+  @override
+  FluCastAppState createState() => FluCastAppState();
+}
 
+class FluCastAppState extends State<FluCastApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
