@@ -159,8 +159,15 @@ class _MyHomePageState extends State<MyHomePage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(myPodcast.description.toString(),
-                              style: TextStyle(fontSize: 16))
+                          Text(
+                            myPodcast.description.toString(),
+                            style: TextStyle(fontSize: 16),
+                            strutStyle: StrutStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 30,
+                              height: 0.75,
+                            ),
+                          )
                         ]),
                   ),
                 ),
