@@ -15,12 +15,19 @@ class _MyHomePageState extends State<MyHomePage>
   AudioPlayer audioPlayer;
 
   Widget _buildEpisodeTitle(Episode __episode) {
-    if (currentEpisode.title == __episode.title) {
-      return Text(
-        __episode.title,
-        softWrap: true,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      );
+    if (currentEpisode != null) {
+      if (currentEpisode.title == __episode.title) {
+        return Text(
+          __episode.title,
+          softWrap: true,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        );
+      } else {
+        return Text(
+          __episode.title,
+          softWrap: true,
+        );
+      }
     } else {
       return Text(
         __episode.title,
@@ -37,70 +44,78 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
+  void _play() {
+    if (_isPlaying == true) {
+      audioPlayer.stop();
+      _isPlaying = false;
+      print("Stop...");
+    } else {
+      audioPlayer.play(currentEpisode.url.toString());
+      _isPlaying = true;
+      print("Play: " + currentEpisode.url.toString());
+    }
+  }
+
+  Widget _buildDefaultEpisode(Podcast __podcast, Episode __episode) {
+    return Card(
+        child: Column(children: [
+      ListTile(
+          leading:
+              Image(image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
+          title: _buildEpisodeTitle(__episode),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                __episode.pubDate.toString(),
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
+            ],
+          ),
+          trailing: Icon(Icons.play_circle_outline),
+          onTap: () {
+            setState(() {
+              currentEpisode = __episode;
+              _play();
+            });
+          }),
+    ]));
+  }
+
   Widget _buildEpisodeRow(Podcast __podcast, Episode __episode) {
     if (__podcast.episodes.isNotEmpty) {
-      if (currentEpisode.title == __episode.title) {
-        return Card(
-            child: Column(children: [
-          ListTile(
-              leading: Image(
-                  image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
-              title: _buildEpisodeTitle(__episode),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    __episode.pubDate.toString(),
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
-                ],
-              ),
-              trailing: Icon(_getEpisodeIcon()),
-              onTap: () {
-                setState(() {
-                  currentEpisode = __episode;
-                  if (_isPlaying == true) {
-                    audioPlayer.stop();
-                    _isPlaying = false;
-                  } else {
-                    audioPlayer.play(__episode.url.toString());
-                    _isPlaying = true;
-                  }
-                });
-              }),
-        ]));
+      if (currentEpisode != null) {
+        if (currentEpisode.title == __episode.title) {
+          return Card(
+              child: Column(children: [
+            ListTile(
+                leading: Image(
+                    image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
+                title: _buildEpisodeTitle(__episode),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      __episode.pubDate.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
+                  ],
+                ),
+                trailing: Icon(_getEpisodeIcon()),
+                onTap: () {
+                  setState(() {
+                    currentEpisode = __episode;
+                    _play();
+                  });
+                }),
+          ]));
+        } else {
+          return _buildDefaultEpisode(__podcast, __episode);
+        }
       } else {
-        return Card(
-            child: Column(children: [
-          ListTile(
-              leading: Image(
-                  image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
-              title: _buildEpisodeTitle(__episode),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    __episode.pubDate.toString(),
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
-                ],
-              ),
-              trailing: Icon(Icons.play_circle_outline),
-              onTap: () {
-                setState(() {
-                  currentEpisode = __episode;
-                  if (_isPlaying == true) {
-                    audioPlayer.stop();
-                    _isPlaying = false;
-                  } else {
-                    audioPlayer.play(__episode.url.toString());
-                    _isPlaying = true;
-                  }
-                });
-              }),
-        ]));
+        return _buildDefaultEpisode(__podcast, __episode);
       }
     } else {
       return Center(child: Text("Nenhum episódio encontrado."));
@@ -108,8 +123,52 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   Widget _podcastDetails() {
-    return Column(
-      children: [Image.network(myPodcast.logoUrl)],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5,
+                  margin: EdgeInsets.all(10),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Image.network(myPodcast.logoUrl, fit: BoxFit.fill),
+                  ]),
+                ),
+                Card(
+                  semanticContainer: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5,
+                  margin: EdgeInsets.all(10),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(myPodcast.description.toString(),
+                              style: TextStyle(fontSize: 16))
+                        ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

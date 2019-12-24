@@ -10,9 +10,6 @@ Future<Podcast> loadPodcast() async {
 
 void main() async {
   myPodcast = await loadPodcast();
-  if (myPodcast.episodes.isNotEmpty) {
-    currentEpisode = myPodcast.episodes.first;
-  }
   runApp(FluCastApp());
 }
 
