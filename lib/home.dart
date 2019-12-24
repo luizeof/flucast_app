@@ -17,11 +17,13 @@ class _MyHomePageState extends State<MyHomePage>
   Widget _buildEpisodeTitle(Episode __episode) {
     if (currentEpisode != null) {
       if (currentEpisode.title == __episode.title) {
-        return Text(
+        return Center(
+            child: Text(
           __episode.title,
           softWrap: true,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        );
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          textAlign: TextAlign.center,
+        ));
       } else {
         return Text(
           __episode.title,
@@ -36,11 +38,17 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  IconData _getEpisodeIcon() {
+  Icon _getEpisodeIcon() {
     if (_isPlaying == true) {
-      return Icons.stop;
+      return Icon(
+        Icons.stop,
+        color: Colors.green,
+      );
     } else {
-      return Icons.play_circle_outline;
+      return Icon(
+        Icons.play_circle_outline,
+        color: Colors.grey,
+      );
     }
   }
 
@@ -87,30 +95,36 @@ class _MyHomePageState extends State<MyHomePage>
     if (__podcast.episodes.isNotEmpty) {
       if (currentEpisode != null) {
         if (currentEpisode.title == __episode.title) {
-          return Card(
-              child: Column(children: [
-            ListTile(
-                leading: Image(
-                    image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
-                title: _buildEpisodeTitle(__episode),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      __episode.pubDate.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                    ),
-                  ],
-                ),
-                trailing: Icon(_getEpisodeIcon()),
-                onTap: () {
-                  setState(() {
-                    currentEpisode = __episode;
-                    _play();
-                  });
-                }),
-          ]));
+          return Center(
+              child: Card(
+                  shape: new RoundedRectangleBorder(
+                      side: new BorderSide(color: Colors.blue, width: 2.0),
+                      borderRadius: BorderRadius.circular(4.0)),
+                  child: Center(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 15, right: 15, top: 30, bottom: 30),
+                          child: Column(children: [
+                            ListTile(
+                                title: _buildEpisodeTitle(__episode),
+                                subtitle: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                        child: Text(
+                                      __episode.pubDate.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ],
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    currentEpisode = __episode;
+                                    _play();
+                                  });
+                                }),
+                          ])))));
         } else {
           return _buildDefaultEpisode(__podcast, __episode);
         }

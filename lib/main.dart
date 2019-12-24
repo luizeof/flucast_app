@@ -10,6 +10,7 @@ Future<Podcast> loadPodcast() async {
 
 void main() async {
   myPodcast = await loadPodcast();
+
   runApp(FluCastApp());
 }
 
