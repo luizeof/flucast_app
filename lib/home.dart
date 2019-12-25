@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flucast_app/global.dart';
 import 'package:dart_pod/dart_pod.dart';
 import 'package:audioplayer/audioplayer.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'dart:async';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -10,20 +12,126 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  bool _isPlaying = false;
-
   AudioPlayer audioPlayer;
+
+  PlayerState playerState = PlayerState.stopped;
+
+  Duration duration;
+
+  Duration position;
+
+  get isPlaying => playerState == PlayerState.playing;
+
+  get isPaused => playerState == PlayerState.paused;
+
+  StreamSubscription _positionSubscription;
+
+  StreamSubscription _audioPlayerStateSubscription;
+
+  get durationText =>
+      duration != null ? duration.toString().split('.').first : '';
+  get positionText =>
+      position != null ? position.toString().split('.').first : '';
+  get positionNum => position != null ? position.inSeconds : 0;
+  get durationNum => duration != null ? duration.inSeconds : 0;
+
+  bool isMuted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initAudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    _positionSubscription.cancel();
+    _audioPlayerStateSubscription.cancel();
+    audioPlayer.stop();
+    super.dispose();
+  }
+
+  void onComplete() {
+    setState(() => playerState = PlayerState.stopped);
+  }
+
+  double playerProgress() {
+    try {
+      if (positionNum > 0 && durationNum > 0) {
+        return ((durationNum * (positionNum / 100)) / durationNum) / 100;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  void initAudioPlayer() {
+    audioPlayer = new AudioPlayer();
+    _positionSubscription = audioPlayer.onAudioPositionChanged
+        .listen((p) => setState(() => position = p));
+    _audioPlayerStateSubscription =
+        audioPlayer.onPlayerStateChanged.listen((s) {
+      if (s == AudioPlayerState.PLAYING) {
+        setState(() => duration = audioPlayer.duration);
+      } else if (s == AudioPlayerState.STOPPED) {
+        onComplete();
+        setState(() {
+          position = duration;
+        });
+      }
+    }, onError: (msg) {
+      setState(() {
+        playerState = PlayerState.stopped;
+        duration = new Duration(seconds: 0);
+        position = new Duration(seconds: 0);
+      });
+    });
+  }
+
+  Future play() async {
+    await audioPlayer.play(currentEpisode.url.toString());
+    setState(() {
+      playerState = PlayerState.playing;
+    });
+    print("play..." + currentEpisode.title.toString());
+  }
+
+  Future pause() async {
+    await audioPlayer.pause();
+    setState(() => playerState = PlayerState.paused);
+    print("pause...");
+  }
+
+  Future stop() async {
+    await audioPlayer.stop();
+    setState(() {
+      playerState = PlayerState.stopped;
+      position = new Duration();
+    });
+    print("stop...");
+  }
+
+  Future mute(bool muted) async {
+    await audioPlayer.mute(muted);
+    setState(() {
+      isMuted = muted;
+    });
+    print("mute...");
+  }
 
   Widget _buildEpisodeTitle(Episode __episode) {
     if (currentEpisode != null) {
       if (currentEpisode.title == __episode.title) {
         return Center(
-            child: Text(
-          __episode.title,
-          softWrap: true,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          textAlign: TextAlign.center,
-        ));
+          child: Text(
+            __episode.title,
+            softWrap: true,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+        );
       } else {
         return Text(
           __episode.title,
@@ -38,8 +146,8 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  Icon _getEpisodeIcon() {
-    if (_isPlaying == true) {
+  Icon _episodeIcon() {
+    if (isPlaying == true) {
       return Icon(
         Icons.stop,
         color: Colors.green,
@@ -52,43 +160,42 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  void _play() {
-    if (_isPlaying == true) {
-      audioPlayer.stop();
-      _isPlaying = false;
-      print("Stop...");
-    } else {
-      audioPlayer.play(currentEpisode.url.toString());
-      _isPlaying = true;
-      print("Play: " + currentEpisode.url.toString());
-    }
-  }
-
   Widget _buildDefaultEpisode(Podcast __podcast, Episode __episode) {
     return Card(
-        child: Column(children: [
-      ListTile(
-          leading:
-              Image(image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
-          title: _buildEpisodeTitle(__episode),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                __episode.pubDate.toString(),
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-              ),
-            ],
+      child: Column(
+        children: [
+          ListTile(
+            leading: Image(
+                image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
+            title: _buildEpisodeTitle(__episode),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  __episode.pubDate.toString(),
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                ),
+              ],
+            ),
+            trailing: Icon(Icons.play_circle_outline),
+            onTap: () {
+              setState(
+                () {
+                  currentEpisode = __episode;
+                },
+              );
+              if (isPlaying) {
+                stop();
+                play();
+              } else {
+                play();
+              }
+            },
           ),
-          trailing: Icon(Icons.play_circle_outline),
-          onTap: () {
-            setState(() {
-              currentEpisode = __episode;
-              _play();
-            });
-          }),
-    ]));
+        ],
+      ),
+    );
   }
 
   Widget _buildEpisodeRow(Podcast __podcast, Episode __episode) {
@@ -96,35 +203,91 @@ class _MyHomePageState extends State<MyHomePage>
       if (currentEpisode != null) {
         if (currentEpisode.title == __episode.title) {
           return Center(
-              child: Card(
-                  shape: new RoundedRectangleBorder(
-                      side: new BorderSide(color: Colors.blue, width: 2.0),
-                      borderRadius: BorderRadius.circular(4.0)),
-                  child: Center(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 15, right: 15, top: 30, bottom: 30),
-                          child: Column(children: [
-                            ListTile(
-                                title: _buildEpisodeTitle(__episode),
-                                subtitle: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+            child: Card(
+              shape: new RoundedRectangleBorder(
+                side: new BorderSide(color: Colors.blue, width: 2.0),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      top: 30,
+                      bottom: 30,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          currentEpisode = __episode;
+                        });
+                        if (isPlaying) {
+                          pause();
+                        } else {
+                          if (currentEpisode == null) {
+                            stop();
+                          } else {
+                            play();
+                          }
+                        }
+                      },
+                      onDoubleTap: () {
+                        setState(() {
+                          currentEpisode = null;
+                        });
+                        if (isPlaying) {
+                          stop();
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: _buildEpisodeTitle(__episode),
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Divider(),
+                                Center(
+                                  child: Text(
+                                    __episode.pubDate.toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Divider(),
+                                LinearProgressIndicator(
+                                  value: playerProgress(),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Center(
-                                        child: Text(
-                                      __episode.pubDate.toString(),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    )),
+                                    Container(
+                                      child: Text(
+                                        positionText.toString(),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        durationText.toString(),
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                onTap: () {
-                                  setState(() {
-                                    currentEpisode = __episode;
-                                    _play();
-                                  });
-                                }),
-                          ])))));
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         } else {
           return _buildDefaultEpisode(__podcast, __episode);
         }
@@ -132,7 +295,9 @@ class _MyHomePageState extends State<MyHomePage>
         return _buildDefaultEpisode(__podcast, __episode);
       }
     } else {
-      return Center(child: Text("Nenhum episódio encontrado."));
+      return Center(
+        child: Text("Nenhum episódio encontrado."),
+      );
     }
   }
 
@@ -156,9 +321,15 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   elevation: 5,
                   margin: EdgeInsets.all(10),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    Image.network(myPodcast.logoUrl, fit: BoxFit.fill),
-                  ]),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.network(
+                        myPodcast.logoUrl,
+                        fit: BoxFit.fill,
+                      ),
+                    ],
+                  ),
                 ),
                 Card(
                   semanticContainer: true,
@@ -170,18 +341,19 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            myPodcast.description.toString(),
-                            style: TextStyle(fontSize: 17),
-                            strutStyle: StrutStyle(
-                              fontSize: 34,
-                              height: .65,
-                            ),
-                          )
-                        ]),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          myPodcast.description.toString(),
+                          style: TextStyle(fontSize: 17),
+                          strutStyle: StrutStyle(
+                            fontSize: 34,
+                            height: .65,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -196,45 +368,47 @@ class _MyHomePageState extends State<MyHomePage>
     return Column(
       children: <Widget>[
         new Expanded(
-            child: new ListView.builder(
-                itemCount: myPodcast.episodes.length,
-                itemBuilder: (BuildContext ctxt, int i) {
-                  return _buildEpisodeRow(myPodcast, myPodcast.episodes[i]);
-                }))
+          child: new ListView.builder(
+            itemCount: myPodcast.episodes.length,
+            itemBuilder: (BuildContext ctxt, int i) {
+              return _buildEpisodeRow(myPodcast, myPodcast.episodes[i]);
+            },
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    audioPlayer = new AudioPlayer();
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(myPodcast.title),
-            bottom: TabBar(
-              tabs: <Tab>[
-                Tab(text: 'Sobre'),
-                Tab(text: 'Episódios'),
-              ],
-            ),
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(myPodcast.title),
+          bottom: TabBar(
+            tabs: <Tab>[
+              Tab(text: 'Sobre'),
+              Tab(text: 'Episódios'),
+            ],
           ),
-          body: TabBarView(
-            children: [
-              _podcastDetails(),
-              _podcatEpisodesList(),
-            ].toList(),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myPodcast = myPodcast;
-              });
-            },
-            tooltip: 'Update Feed',
-            child: Icon(Icons.refresh),
-          ),
-        ));
+        ),
+        body: TabBarView(
+          children: [
+            _podcastDetails(),
+            _podcatEpisodesList(),
+          ].toList(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              myPodcast = myPodcast;
+            });
+          },
+          tooltip: 'Update Feed',
+          child: Icon(Icons.refresh),
+        ),
+      ),
+    );
   }
 }
