@@ -155,19 +155,11 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   Icon _episodeIcon() {
-    if (isPlaying == true) {
-      return Icon(
-        Icons.pause,
-        color: Colors.green,
-        size: 40,
-      );
-    } else {
-      return Icon(
-        Icons.play_arrow,
-        color: Colors.green,
-        size: 40,
-      );
-    }
+    return Icon(
+      (isPlaying == true ? Icons.pause : Icons.play_arrow),
+      color: Colors.green,
+      size: 50,
+    );
   }
 
   Widget _buildDefaultEpisode(Podcast __podcast, Episode __episode) {
