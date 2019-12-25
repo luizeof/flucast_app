@@ -11,22 +11,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
+      
   AudioPlayer audioPlayer;
-
   PlayerState playerState = PlayerState.stopped;
-
   Duration duration;
-
   Duration position;
-
-  get isPlaying => playerState == PlayerState.playing;
-
-  get isPaused => playerState == PlayerState.paused;
-
   StreamSubscription _positionSubscription;
-
   StreamSubscription _audioPlayerStateSubscription;
 
+  get isPlaying => playerState == PlayerState.playing;
+  get isPaused => playerState == PlayerState.paused;
   get durationText =>
       duration != null ? duration.toString().split('.').first : '';
   get positionText =>
