@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flucast_app/global.dart';
 import 'package:dart_pod/dart_pod.dart';
 import 'package:audioplayer/audioplayer.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'dart:async';
 
 class MyHomePage extends StatefulWidget {
@@ -125,11 +124,20 @@ class _MyHomePageState extends State<MyHomePage>
     if (currentEpisode != null) {
       if (currentEpisode.title == __episode.title) {
         return Center(
-          child: Text(
-            __episode.title,
-            softWrap: true,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            textAlign: TextAlign.center,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            child: Text(
+              __episode.title,
+              softWrap: true,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.left,
+            ),
           ),
         );
       } else {
@@ -149,13 +157,15 @@ class _MyHomePageState extends State<MyHomePage>
   Icon _episodeIcon() {
     if (isPlaying == true) {
       return Icon(
-        Icons.stop,
+        Icons.pause,
         color: Colors.green,
+        size: 40,
       );
     } else {
       return Icon(
-        Icons.play_circle_outline,
-        color: Colors.grey,
+        Icons.play_arrow,
+        color: Colors.green,
+        size: 40,
       );
     }
   }
@@ -243,7 +253,14 @@ class _MyHomePageState extends State<MyHomePage>
                       child: Column(
                         children: [
                           ListTile(
-                            title: _buildEpisodeTitle(__episode),
+                            title: Row(
+                              children: [
+                                _episodeIcon(),
+                                Expanded(
+                                  child: _buildEpisodeTitle(__episode),
+                                ),
+                              ],
+                            ),
                             subtitle: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

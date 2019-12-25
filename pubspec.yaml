@@ -18,7 +18,6 @@ environment:
 
 dependencies:
   dart_pod:
-  percent_indicator:
   audioplayer:
   flutter:
     sdk: flutter
