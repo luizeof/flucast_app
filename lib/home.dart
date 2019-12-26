@@ -327,10 +327,10 @@ class _MyHomePageState extends State<MyHomePage>
                     semanticContainer: true,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(0),
                     ),
                     elevation: 5,
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -341,12 +341,7 @@ class _MyHomePageState extends State<MyHomePage>
                       ],
                     ),
                   ),
-                  Card(
-                    semanticContainer: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 5,
+                  Container(
                     margin: EdgeInsets.all(10),
                     child: Padding(
                       padding: EdgeInsets.all(10),
