@@ -1,4 +1,4 @@
-# flucast_app
+# FluCast
 
 A Open Source Podcast app for your Show
 
