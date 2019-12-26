@@ -30,6 +30,6 @@ FluCast has the most features that you need to play your show:
 ## Dev Dependencies
 
 - flutter_launcher_icons (https://pub.dev/packages/flutter_launcher_icons)
-- dart_pod
-- html
-- audioplayer
+- dart_pod (https://pub.dev/packages/dart_pod)
+- html (https://pub.dev/packages/html)
+- audioplayer (https://pub.dev/packages/audioplayer)
