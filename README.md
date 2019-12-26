@@ -22,11 +22,10 @@ FluCast has the most features that you need to play your show:
 
 ## Screens
 
-<img align="left" width="47%" src="docs/home.png">
-<img align="left" width="47%" src="docs/episodes.png">
- 
-<img align="left" width="47%" src="docs/playing.png">
-<img align="left" width="47%" src="docs/details.png">
+<img align="left" width="23%" src="docs/home.png">
+<img align="left" width="23%" src="docs/episodes.png">
+<img align="left" width="23%" src="docs/playing.png">
+<img align="left" width="23%" src="docs/details.png">
 
 ## Dev Dependencies
 
