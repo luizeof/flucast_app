@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flucast_app/global.dart';
-import 'package:dart_pod/dart_pod.dart';
-import 'package:audioplayer/audioplayer.dart';
 import 'dart:async';
+
+import 'package:audioplayer/audioplayer.dart';
+import 'package:dart_pod/dart_pod.dart';
+import 'package:flucast_app/global.dart';
+import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -174,7 +175,10 @@ class _MyHomePageState extends State<MyHomePage>
           return Center(
             child: Card(
               shape: new RoundedRectangleBorder(
-                side: new BorderSide(color: Colors.blue, width: 2.0),
+                side: new BorderSide(
+                  color: Colors.blue,
+                  width: 2.0,
+                ),
                 borderRadius: BorderRadius.circular(4.0),
               ),
               child: Column(

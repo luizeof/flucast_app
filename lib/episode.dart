@@ -15,23 +15,29 @@ class _MyEpisodePageState extends State<MyEpisodePage>
     setState(() {
       playerState = PlayerState.playing;
     });
-    print("play..." + currentEpisode.title.toString());
   }
 
   Future pause() async {
     await audioPlayer.pause();
     setState(() => playerState = PlayerState.paused);
-    print("pause...");
   }
 
   Future seek() async {
-    double _s = positionNum + 10.0;
+    double _s = positionNum + 30.0;
     if (_s >= double.parse(durationNum.toString())) {
       await audioPlayer.seek(durationNum);
     } else {
       await audioPlayer.seek(_s);
     }
-    print("seek...");
+  }
+
+  Future replay() async {
+    double _s = positionNum - 30.0;
+    if (_s <= 0.0) {
+      await audioPlayer.seek(0);
+    } else {
+      await audioPlayer.seek(_s);
+    }
   }
 
   Future stop() async {
@@ -40,7 +46,6 @@ class _MyEpisodePageState extends State<MyEpisodePage>
       playerState = PlayerState.stopped;
       position = new Duration();
     });
-    print("stop...");
   }
 
   Widget _buildDetail() {
@@ -93,13 +98,26 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          currentEpisode.title,
-                          style: TextStyle(fontSize: 22),
-                          textAlign: TextAlign.center,
-                          strutStyle: StrutStyle(
-                            fontSize: 34,
-                            height: .65,
+                        Center(
+                          child: Text(
+                            currentEpisode.pubDate.toString(),
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            currentEpisode.title,
+                            style: TextStyle(
+                              fontSize: 22,
+                            ),
+                            textAlign: TextAlign.center,
+                            strutStyle: StrutStyle(
+                              fontSize: 34,
+                              height: .65,
+                            ),
                           ),
                         ),
                       ],
@@ -143,12 +161,23 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                         ),
                         FlatButton(
                           child: Icon(
-                            Icons.forward_5,
+                            Icons.forward_30,
                             color: Colors.blue,
                             size: 33,
                           ),
                           onPressed: () {
                             seek();
+                            setState() {}
+                          },
+                        ),
+                        FlatButton(
+                          child: Icon(
+                            Icons.replay_30,
+                            color: Colors.blue,
+                            size: 33,
+                          ),
+                          onPressed: () {
+                            replay();
                             setState() {}
                           },
                         ),
@@ -164,12 +193,6 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          currentEpisode.pubDate.toString(),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
                         Text(
                           parse(
                             currentEpisode.description.toString().replaceAll(
