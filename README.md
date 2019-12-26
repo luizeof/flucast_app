@@ -12,21 +12,20 @@ Simply configure your Podcast feed, tweak the app icon, build and make it availa
 
 FluCast has the most features that you need to play your show:
 
-- Podcast Cover
-- Podcast Description
-- Episodes Listing
-- Player Status
-- Play, Pause and Stop
-- 30 Seconds Seek
-- Episode Description
+- [x] Podcast Cover
+- [x] Podcast Description
+- [x] Episodes Listing
+- [x] Player Status
+- [x] Play, Pause and Stop
+- [x] 30 Seconds Seek
+- [x] Episode Description
 
 ## Setting Up
 
 Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file.
 
 ```dart
-final podcastFeedUrl =
-    "https://anchor.fm/s/848f2e4/podcast/rss";
+final podcastFeedUrl = "https://anchor.fm/s/848f2e4/podcast/rss";
 ```
 
 ## Screens
