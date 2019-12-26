@@ -32,7 +32,7 @@ final podcastFeedUrl = "https://anchor.fm/s/848f2e4/podcast/rss";
 
 ## Setting Up App Name
 
-### Android
+### For Android
 
 Open the configuration file [android/app/src/main/AndroidManifest.xml](https://github.com/luizeof/flucast_app/blob/master/android/app/src/main/AndroidManifest.xml) and change this line:
 
@@ -41,9 +41,10 @@ Open the configuration file [android/app/src/main/AndroidManifest.xml](https://g
     android:label="FluCast" ...> // Your app name here
 ```
 
-### iOS
+### For iOS
 
-Open info.plist (located at ios/Runner)
+Open the configuration file [ios/Runner/info.plist](https://github.com/luizeof/flucast_app/blob/master/ios/Runner/info.plist) and change this line:
+
 
 ```xml
 <key>CFBundleName</key>
