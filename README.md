@@ -20,7 +20,7 @@ FluCast has the most features that you need to play your show:
 - [x] 30 Seconds Seek
 - [x] Episode Description
 
-## Setting Up
+## Setting Up Feed
 
 Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file.
 
@@ -28,6 +28,37 @@ You need to specify a valid **Podcast RSS Feed**.
 
 ```dart
 final podcastFeedUrl = "https://anchor.fm/s/848f2e4/podcast/rss";
+```
+
+## Setting Up App Name
+
+### Android
+
+Open the configuration file [android/app/src/main/AndroidManifest.xml](https://github.com/luizeof/flucast_app/blob/master/android/app/src/main/AndroidManifest.xml) and change this line:
+
+```xml
+<application
+    android:label="App Name" ...> // Your app name here
+```
+
+### iOS
+
+Open info.plist (located at ios/Runner)
+
+```xml
+<key>CFBundleName</key>
+<string>App Name</string> // Your app name here
+```
+
+## Setting Up App Icon
+
+FluCast default icon is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand.
+
+After change the app icon, you need to run this command on app root directory:
+
+```bash
+ flutter pub get
+ flutter pub run flutter_launcher_icons:main -f pubspec.yaml
 ```
 
 ## Screens
