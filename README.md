@@ -1,12 +1,14 @@
 # flucast_app
 
-A OpenSource Podcast app for your Show
+A Open Source Podcast app for your Show
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Have you always wanted an exclusive app for your Podcast? Now you can customize and make available to your audience a player for Android and iOS developed with Flutter. Open Source
 
-## Features
+Simply configure your Podcast feed, tweak the app icon, build and make it available in stores.
+
+## Main Features
 
 FluCast has the most features that you need to play your show:
 
