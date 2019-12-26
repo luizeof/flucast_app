@@ -4,7 +4,7 @@ A Open Source Podcast app for your Show
 
 ## Getting Started
 
-Have you always wanted an exclusive app for your Podcast? Now you can customize and make available to your audience a player for Android and iOS developed with Flutter. Open Source
+Have you always wanted an exclusive app for your Podcast? Now you can customize and make available to your audience a player for Android and iOS developed with Flutter.
 
 Simply configure your Podcast feed, tweak the app icon, build and make it available in stores.
 
