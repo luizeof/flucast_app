@@ -43,7 +43,7 @@ Open the configuration file [android/app/src/main/AndroidManifest.xml](https://g
 
 ### For iOS
 
-Open the configuration file [ios/Runner/info.plist](https://github.com/luizeof/flucast_app/blob/master/ios/Runner/info.plist) and change this line:
+Open the configuration file [ios/Runner/Info.plist](https://github.com/luizeof/flucast_app/blob/master/ios/Runner/Info.plist) and change this line:
 
 
 ```xml
