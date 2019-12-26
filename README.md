@@ -1,6 +1,6 @@
 # flucast_app
 
-A OpenSource Podcast app for your Podcast
+A OpenSource Podcast app for your Show
 
 ## Getting Started
 
