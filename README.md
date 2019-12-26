@@ -21,6 +21,7 @@ FluCast has the most features that you need to play your show:
 - Episode Description
 
 ## Screens
+Home | Episodes | Playing | Details
 ---- | ---- | ---- | ----
 <img align="left" src="docs/home.png"> |  <img align="left" src="docs/episodes.png"> |  <img align="left" src="docs/playing.png"> |  <img align="left" src="docs/details.png">
 
