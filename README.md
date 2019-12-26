@@ -24,6 +24,11 @@ FluCast has the most features that you need to play your show:
 
 Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file.
 
+```dart
+final podcastFeedUrl =
+    "https://anchor.fm/s/848f2e4/podcast/rss";
+```
+
 ## Screens
 Home | Episodes | Playing | Details
 ---- | ---- | ---- | ----
