@@ -72,4 +72,4 @@ Home | Episodes | Playing | Details
 
 ## Resources
 
-- app icon (https://www.flaticon.com/free-icon/record_1064911)
+- Default App Icon (https://www.flaticon.com/free-icon/record_1064911)
