@@ -53,9 +53,7 @@ Open the configuration file [ios/Runner/Info.plist](https://github.com/luizeof/f
 
 ## Setting Up App Icon
 
-FluCast default icon is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand.
-
-After change the app icon, you need to run this command on app root directory:
+FluCast default icon is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand. After change the app icon, you need to run this command on app root directory:
 
 ```bash
  flutter pub get
