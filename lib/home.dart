@@ -297,87 +297,120 @@ class _MyHomePageState extends State<MyHomePage>
       }
     } else {
       return Center(
-        child: Text("Nenhum episódio encontrado."),
+        child: Icon(
+          Icons.audiotrack,
+          size: 55,
+          color: Colors.greenAccent,
+        ),
       );
     }
   }
 
   Widget _podcastDetails() {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints viewportConstraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: viewportConstraints.maxHeight,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Card(
-                  semanticContainer: true,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 5,
-                  margin: EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.network(
-                        myPodcast.logoUrl,
-                        fit: BoxFit.fill,
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  semanticContainer: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 5,
-                  margin: EdgeInsets.all(10),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
+    if (myPodcast.runtimeType == Podcast) {
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: viewportConstraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Card(
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 5,
+                    margin: EdgeInsets.all(10),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          myPodcast.description.toString(),
-                          style: TextStyle(fontSize: 17),
-                          strutStyle: StrutStyle(
-                            fontSize: 34,
-                            height: .65,
-                          ),
+                        Image.network(
+                          myPodcast.logoUrl,
+                          fit: BoxFit.fill,
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  Card(
+                    semanticContainer: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 5,
+                    margin: EdgeInsets.all(10),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            myPodcast.description.toString(),
+                            style: TextStyle(fontSize: 17),
+                            strutStyle: StrutStyle(
+                              fontSize: 34,
+                              height: .65,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: Icon(
+          Icons.cast,
+          color: Colors.grey,
+          size: 99,
+        ),
+      );
+    }
   }
 
   Widget _podcatEpisodesList() {
-    return Column(
-      children: <Widget>[
-        new Expanded(
-          child: new ListView.builder(
-            itemCount: myPodcast.episodes.length,
-            itemBuilder: (BuildContext ctxt, int i) {
-              return _buildEpisodeRow(myPodcast, myPodcast.episodes[i]);
-            },
+    int _num =
+        (myPodcast.runtimeType == Podcast ? myPodcast.episodes.length : 0);
+
+    if (_num > 0) {
+      return Column(
+        children: <Widget>[
+          new Expanded(
+            child: new ListView.builder(
+              itemCount: _num,
+              itemBuilder: (
+                BuildContext ctxt,
+                int i,
+              ) {
+                return _buildEpisodeRow(
+                  myPodcast,
+                  myPodcast.episodes[i],
+                );
+              },
+            ),
           ),
+        ],
+      );
+    } else {
+      return Center(
+        child: Icon(
+          Icons.list,
+          color: Colors.grey,
+          size: 99,
         ),
-      ],
-    );
+      );
+    }
   }
 
   @override
@@ -386,7 +419,8 @@ class _MyHomePageState extends State<MyHomePage>
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(myPodcast.title),
+          title: Text(
+              (myPodcast.runtimeType == Podcast ? myPodcast.title : "FluCast")),
           bottom: TabBar(
             tabs: <Tab>[
               Tab(text: 'Sobre'),
