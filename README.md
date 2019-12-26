@@ -8,10 +8,15 @@ This project is a starting point for a Flutter application.
 
 ## Features
 
-FluCast has the most feature you need to play Podcasts:
+FluCast has the most features that you need to play your show:
 
 - Podcast Cover
 - Podcast Description
+- Episodes Listing
+- Player Status
+- Play, Pause and Stop
+- 30 Seconds Seek
+- Episode Description
 
 ## Screens
 
