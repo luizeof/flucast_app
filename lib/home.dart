@@ -160,7 +160,9 @@ class _MyHomePageState extends State<MyHomePage>
         children: [
           ListTile(
             leading: Image(
-                image: NetworkImage(__podcast.logoUrl), fit: BoxFit.cover),
+              image: NetworkImage(__podcast.logoUrl),
+              fit: BoxFit.cover,
+            ),
             title: _buildEpisodeTitle(__episode),
             subtitle: Row(
               mainAxisAlignment: MainAxisAlignment.start,
