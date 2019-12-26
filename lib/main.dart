@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flucast_app/home.dart';
-import 'package:flucast_app/episode.dart';
-import 'package:flucast_app/global.dart';
-import 'package:dart_pod/dart_pod.dart';
-import 'package:flucast_app/feed.dart';
 import 'package:audioplayer/audioplayer.dart';
+import 'package:dart_pod/dart_pod.dart';
+import 'package:flucast_app/episode.dart';
+import 'package:flucast_app/feed.dart';
+import 'package:flucast_app/global.dart';
+import 'package:flucast_app/home.dart';
+import 'package:flutter/material.dart';
 
 Future<Podcast> loadPodcast() async {
   Podcast p = await Podcast.newFromURL(podcastFeedUrl.toString());
