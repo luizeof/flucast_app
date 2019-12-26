@@ -33,3 +33,7 @@ FluCast has the most features that you need to play your show:
 - dart_pod (https://pub.dev/packages/dart_pod)
 - html (https://pub.dev/packages/html)
 - audioplayer (https://pub.dev/packages/audioplayer)
+
+## Resources
+
+- app icon (https://www.flaticon.com/free-icon/record_1064911)
