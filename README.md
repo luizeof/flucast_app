@@ -24,7 +24,7 @@ See more at [changelog.md](https://github.com/luizeof/flucast_app/blob/master/CH
 
 ## Setting Up Feed
 
-Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file with a valid **Podcast RSS Feed**.
+Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file with a [Valid Podcast RSS Feed](https://developers.google.com/search/reference/podcast/rss-feed).
 
 ```dart
 final podcastFeedUrl = 'https://anchor.fm/s/848f2e4/podcast/rss';
