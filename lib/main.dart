@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flucast_app/home.dart';
+import 'package:flucast_app/episode.dart';
 import 'package:flucast_app/global.dart';
 import 'package:dart_pod/dart_pod.dart';
 import 'package:flucast_app/feed.dart';
-
+import 'package:audioplayer/audioplayer.dart';
 
 Future<Podcast> loadPodcast() async {
   Podcast p = await Podcast.newFromURL(podcastFeedUrl.toString());
@@ -13,6 +14,7 @@ Future<Podcast> loadPodcast() async {
 void main() async {
   myPodcast = await loadPodcast();
   runApp(FluCastApp());
+  audioPlayer = new AudioPlayer();
 }
 
 class FluCastApp extends StatefulWidget {
@@ -31,7 +33,7 @@ class FluCastAppState extends State<FluCastApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => new MyHomePage(),
-        '/detail': (context) => new MyHomePage(),
+        '/detail': (context) => new MyEpisodePage(),
       },
     );
   }

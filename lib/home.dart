@@ -11,23 +11,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  AudioPlayer audioPlayer;
-  PlayerState playerState = PlayerState.stopped;
-  Duration duration;
-  Duration position;
-  StreamSubscription _positionSubscription;
-  StreamSubscription _audioPlayerStateSubscription;
-  bool isMuted = false;
-
-  get isPlaying => playerState == PlayerState.playing;
-  get isPaused => playerState == PlayerState.paused;
-  get durationText =>
-      duration != null ? duration.toString().split('.').first : '';
-  get positionText =>
-      position != null ? position.toString().split('.').first : '';
-  get positionNum => position != null ? position.inSeconds : 0;
-  get durationNum => duration != null ? duration.inSeconds : 0;
-
   @override
   void initState() {
     super.initState();
@@ -36,8 +19,8 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   void dispose() {
-    _positionSubscription.cancel();
-    _audioPlayerStateSubscription.cancel();
+    positionSubscription.cancel();
+    audioPlayerStateSubscription.cancel();
     audioPlayer.stop();
     super.dispose();
   }
@@ -46,24 +29,10 @@ class _MyHomePageState extends State<MyHomePage>
     setState(() => playerState = PlayerState.stopped);
   }
 
-  double playerProgress() {
-    try {
-      if (positionNum > 0 && durationNum > 0) {
-        return ((durationNum * (positionNum / 100)) / durationNum) / 100;
-      } else {
-        return 0;
-      }
-    } catch (e) {
-      return 0;
-    }
-  }
-
   void initAudioPlayer() {
-    audioPlayer = new AudioPlayer();
-    _positionSubscription = audioPlayer.onAudioPositionChanged
+    positionSubscription = audioPlayer.onAudioPositionChanged
         .listen((p) => setState(() => position = p));
-    _audioPlayerStateSubscription =
-        audioPlayer.onPlayerStateChanged.listen((s) {
+    audioPlayerStateSubscription = audioPlayer.onPlayerStateChanged.listen((s) {
       if (s == AudioPlayerState.PLAYING) {
         setState(() => duration = audioPlayer.duration);
       } else if (s == AudioPlayerState.STOPPED) {
@@ -186,8 +155,10 @@ class _MyHomePageState extends State<MyHomePage>
               if (isPlaying) {
                 stop();
                 play();
+                Navigator.pushNamed(context, '/detail');
               } else {
                 play();
+                Navigator.pushNamed(context, '/detail');
               }
             },
           ),
@@ -220,23 +191,8 @@ class _MyHomePageState extends State<MyHomePage>
                         setState(() {
                           currentEpisode = __episode;
                         });
-                        if (isPlaying) {
-                          pause();
-                        } else {
-                          if (currentEpisode == null) {
-                            stop();
-                          } else {
-                            play();
-                          }
-                        }
-                      },
-                      onDoubleTap: () {
-                        setState(() {
-                          currentEpisode = null;
-                        });
-                        if (isPlaying) {
-                          stop();
-                        }
+                        play();
+                        Navigator.pushNamed(context, '/detail');
                       },
                       child: Column(
                         children: [
