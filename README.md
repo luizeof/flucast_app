@@ -27,3 +27,10 @@ FluCast has the most features that you need to play your show:
  
 <img align="left" width="47%" src="docs/playing.png">
 <img align="left" width="47%" src="docs/details.png">
+
+## Dev Dependencies
+
+- flutter_launcher_icons (https://pub.dev/packages/flutter_launcher_icons)
+- dart_pod
+- html
+- audioplayer
