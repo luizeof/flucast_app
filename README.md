@@ -20,6 +20,8 @@ FluCast has the most features that you need to play your show:
 - [x] 30 Seconds Seek
 - [x] Episode Description
 
+See more at [changelog.md](https://github.com/luizeof/flucast_app/blob/master/CHANGELOG.md).
+
 ## Setting Up Feed
 
 Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file with a valid **Podcast RSS Feed**.
