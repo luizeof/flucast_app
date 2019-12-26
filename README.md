@@ -20,12 +20,16 @@ FluCast has the most features that you need to play your show:
 - 30 Seconds Seek
 - Episode Description
 
+## Setting Up
+
+Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file.
+
 ## Screens
 Home | Episodes | Playing | Details
 ---- | ---- | ---- | ----
 <img align="left" src="docs/home.png"> |  <img align="left" src="docs/episodes.png"> |  <img align="left" src="docs/playing.png"> |  <img align="left" src="docs/details.png">
 
-## Dev Dependencies
+## Dependencies
 
 - flutter_launcher_icons (https://pub.dev/packages/flutter_launcher_icons)
 - dart_pod (https://pub.dev/packages/dart_pod)
