@@ -38,7 +38,7 @@ Open the configuration file [android/app/src/main/AndroidManifest.xml](https://g
 
 ```xml
 <application
-    android:label="App Name" ...> // Your app name here
+    android:label="FluCast" ...> // Your app name here
 ```
 
 ### iOS
@@ -47,7 +47,7 @@ Open info.plist (located at ios/Runner)
 
 ```xml
 <key>CFBundleName</key>
-<string>App Name</string> // Your app name here
+<string>FluCast</string> // Your app name here
 ```
 
 ## Setting Up App Icon
