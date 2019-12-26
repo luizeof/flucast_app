@@ -74,15 +74,31 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            child: Text(
-                              positionText.toString(),
-                              textAlign: TextAlign.start,
+                            child: Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Text(
+                                positionText.toString(),
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueGrey,
+                                  fontFamily: "Roboto",
+                                ),
+                              ),
                             ),
                           ),
                           Container(
-                            child: Text(
-                              durationText.toString(),
-                              textAlign: TextAlign.end,
+                            child: Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Text(
+                                durationText.toString(),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueGrey,
+                                  fontFamily: "Roboto",
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -103,6 +119,7 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                             currentEpisode.pubDate.toString(),
                             style: TextStyle(
                               color: Colors.grey,
+                              fontFamily: "Roboto",
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -111,7 +128,9 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                           child: Text(
                             currentEpisode.title,
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 18,
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.w700,
                             ),
                             textAlign: TextAlign.center,
                             strutStyle: StrutStyle(
@@ -185,6 +204,7 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                     ),
                   ),
                 ),
+                Divider(),
                 Container(
                   margin: EdgeInsets.all(10),
                   child: Padding(
@@ -200,6 +220,11 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                                   '\n<p>',
                                 ),
                           ).documentElement.text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                            fontFamily: "Roboto",
+                          ),
                         ),
                       ],
                     ),
@@ -216,21 +241,28 @@ class _MyEpisodePageState extends State<MyEpisodePage>
   void initAudioPlayer() {
     positionSubscription = audioPlayer.onAudioPositionChanged
         .listen((p) => setState(() => position = p));
-    audioPlayerStateSubscription = audioPlayer.onPlayerStateChanged.listen((s) {
-      if (s == AudioPlayerState.PLAYING) {
-        setState(() => duration = audioPlayer.duration);
-      } else if (s == AudioPlayerState.STOPPED) {
-        setState(() {
-          position = duration;
-        });
-      }
-    }, onError: (msg) {
-      setState(() {
-        playerState = PlayerState.stopped;
-        duration = new Duration(seconds: 0);
-        position = new Duration(seconds: 0);
-      });
-    });
+    audioPlayerStateSubscription = audioPlayer.onPlayerStateChanged.listen(
+      (s) {
+        if (s == AudioPlayerState.PLAYING) {
+          setState(() => duration = audioPlayer.duration);
+        } else if (s == AudioPlayerState.STOPPED) {
+          setState(
+            () {
+              position = duration;
+            },
+          );
+        }
+      },
+      onError: (msg) {
+        setState(
+          () {
+            playerState = PlayerState.stopped;
+            duration = new Duration(seconds: 0);
+            position = new Duration(seconds: 0);
+          },
+        );
+      },
+    );
   }
 
   @override
