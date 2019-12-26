@@ -25,7 +25,7 @@ FluCast has the most features that you need to play your show:
 Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file with a valid **Podcast RSS Feed**.
 
 ```dart
-final podcastFeedUrl = "https://anchor.fm/s/848f2e4/podcast/rss";
+final podcastFeedUrl = 'https://anchor.fm/s/848f2e4/podcast/rss';
 ```
 
 ## Setting Up App Name
@@ -51,7 +51,7 @@ Open the configuration file [ios/Runner/Info.plist](https://github.com/luizeof/f
 
 ## Setting Up App Icon
 
-FluCast default icon is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand. After change the app icon, you need to run this command on app root directory:
+FluCast default icon <img align="left" width="32" height="32" src="lib/icon/app_icon.png"> is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand. After change the app icon, you need to run this command on app root directory:
 
 ```bash
  flutter pub get
