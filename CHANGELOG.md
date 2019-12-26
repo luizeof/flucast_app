@@ -1,4 +1,4 @@
-1.0.0 (2019-12-26)
+## 1.0.0 (2019-12-26)
 
 - Show Podcast Cover
 - Show Podcast Description
