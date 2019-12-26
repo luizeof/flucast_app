@@ -172,7 +172,9 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ],
             ),
-            trailing: Icon(Icons.play_circle_outline),
+            trailing: Icon(
+              Icons.play_circle_outline,
+            ),
             onTap: () {
               setState(
                 () {
