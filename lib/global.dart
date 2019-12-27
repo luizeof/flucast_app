@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:audioplayer/audioplayer.dart';
 import 'package:dart_pod/dart_pod.dart';
 
@@ -38,7 +37,7 @@ get durationNum => duration != null ? duration.inSeconds : 0;
 double playerProgress() {
   try {
     if (positionNum > 0 && durationNum > 0) {
-      return ((durationNum * (positionNum / 100)) / durationNum) / 10;
+      return (((positionNum / durationNum) - 1.00)) + 1.00;
     } else {
       return 0;
     }

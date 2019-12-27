@@ -71,6 +71,7 @@ Home | Episodes | Playing | Details
 - dart_pod (https://pub.dev/packages/dart_pod)
 - html (https://pub.dev/packages/html)
 - audioplayer (https://pub.dev/packages/audioplayer)
+- flutter_volume (https://pub.dev/packages/flutter_volume)
 
 ## Resources
 
