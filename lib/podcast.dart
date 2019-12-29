@@ -17,7 +17,6 @@
 //
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
-
 import 'episode.dart';
 
 /// This class holds data about a podcast.
@@ -71,30 +70,13 @@ class Podcast {
   List<Episode> get episodes {
     var eps = List<Episode>();
     for (XmlElement e in doc.findAllElements("item")) {
-      var _episodeCoverUrl = "";
-
-      try {
-        if (e
-            .findElements("itunes:image")
-            .first
-            .getAttribute("href")
-            .isNotEmpty) {
-          _episodeCoverUrl =
-              e.findElements("itunes:image").first.getAttribute("href");
-        } else {
-          _episodeCoverUrl = this.logoUrl;
-        }
-      } catch (e) {
-        _episodeCoverUrl = this.logoUrl;
-      }
-
       eps.add(
         Episode(
           e.findElements("title").first.text,
           e.findElements("description").first.text,
           e.findElements("pubDate").first.text,
           e.findElements("enclosure").first.getAttribute("url"),
-          _episodeCoverUrl,
+          e.findElements("itunes:image").isNotEmpty ? e.findElements("itunes:image").first.getAttribute("href") : this.logoUrl,
         ),
       );
     }
