@@ -78,13 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  dart_pod:
-    dependency: "direct main"
-    description:
-      name: dart_pod
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -110,7 +103,7 @@ packages:
     source: hosted
     version: "0.14.0+3"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"

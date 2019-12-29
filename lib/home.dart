@@ -1,7 +1,24 @@
+//  home.dart
+//
+//  This file is a part of the dart_pod project.
+//
+//  FluCast is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This porogram is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
 import 'dart:async';
-
 import 'package:audioplayer/audioplayer.dart';
-import 'package:dart_pod/dart_pod.dart';
+import 'package:flucast_app/episode.dart';
+import 'package:flucast_app/podcast.dart';
 import 'package:flucast_app/global.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +29,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  
-  
   @override
   void initState() {
     super.initState();
@@ -87,21 +102,19 @@ class _MyHomePageState extends State<MyHomePage>
   Widget _buildEpisodeTitle(Episode __episode) {
     if (currentEpisode != null) {
       if (currentEpisode.title == __episode.title) {
-        return Center(
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 15,
-              right: 15,
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 15,
+            right: 15,
+          ),
+          child: Text(
+            __episode.title,
+            softWrap: true,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
-            child: Text(
-              __episode.title,
-              softWrap: true,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.left,
-            ),
+            textAlign: TextAlign.left,
           ),
         );
       } else {
@@ -132,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage>
         children: [
           ListTile(
             leading: Image(
-              image: NetworkImage(__podcast.logoUrl),
+              image: NetworkImage(__episode.cover),
               fit: BoxFit.cover,
             ),
             title: _buildEpisodeTitle(__episode),
@@ -171,6 +184,7 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   Widget _buildEpisodeRow(Podcast __podcast, Episode __episode) {
+    Size size = MediaQuery.of(context).size;
     if (__podcast.episodes.isNotEmpty) {
       if (currentEpisode != null) {
         if (currentEpisode.title == __episode.title) {
@@ -205,7 +219,12 @@ class _MyHomePageState extends State<MyHomePage>
                           ListTile(
                             title: Row(
                               children: [
-                                _episodeIcon(),
+                                Image.network(
+                                  currentEpisode.cover,
+                                  fit: BoxFit.contain,
+                                  width: size.width / 4.0,
+                                  height: size.width / 4.0,
+                                ),
                                 Expanded(
                                   child: _buildEpisodeTitle(__episode),
                                 ),
@@ -223,8 +242,25 @@ class _MyHomePageState extends State<MyHomePage>
                                   ),
                                 ),
                                 Divider(),
-                                LinearProgressIndicator(
-                                  value: playerProgress(),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.play_arrow,
+                                      color: Colors.green,
+                                      size: 33,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                          right: 15,
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          value: playerProgress(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -380,8 +416,11 @@ class _MyHomePageState extends State<MyHomePage>
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-              (myPodcast.runtimeType == Podcast ? myPodcast.title : "FluCast")),
+          title: Center(
+            child: Text(
+              (myPodcast.runtimeType == Podcast ? myPodcast.title : "FluCast"),
+            ),
+          ),
           bottom: TabBar(
             tabs: <Tab>[
               Tab(text: 'Sobre'),
