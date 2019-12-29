@@ -16,6 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flucast_app/episode.dart';
 import 'package:flucast_app/podcast.dart';
@@ -63,3 +64,11 @@ double playerProgress() {
     return 0;
   }
 }
+
+  Icon episodeIcon() {
+    return Icon(
+      (isPlaying == true ? Icons.pause : Icons.play_arrow),
+      color: Colors.green,
+      size: 50,
+    );
+  }

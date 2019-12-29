@@ -131,13 +131,7 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  Icon _episodeIcon() {
-    return Icon(
-      (isPlaying == true ? Icons.pause : Icons.play_arrow),
-      color: Colors.green,
-      size: 50,
-    );
-  }
+
 
   Widget _buildDefaultEpisode(Podcast __podcast, Episode __episode) {
     return Card(
@@ -159,9 +153,8 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ],
             ),
-            trailing: Icon(
-              Icons.play_circle_outline,
-            ),
+            trailing: 
+              episodeIcon(),
             onTap: () {
               setState(
                 () {

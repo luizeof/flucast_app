@@ -27,19 +27,19 @@ class MyEpisodePage extends StatefulWidget {
 
 class _MyEpisodePageState extends State<MyEpisodePage>
     with SingleTickerProviderStateMixin {
-  Future play() {
+  void play() {
     audioPlayer.play(currentEpisode.url.toString());
     setState(() {
       playerState = PlayerState.playing;
     });
   }
 
-  Future pause() {
+  void pause() {
     audioPlayer.pause();
     setState(() => playerState = PlayerState.paused);
   }
 
-  Future seek() {
+  void seek() {
     if (isPlaying) {
       double _s = positionNum + (durationNum / 20.00);
       if (_s >= double.parse(durationNum.toString())) {
@@ -50,7 +50,7 @@ class _MyEpisodePageState extends State<MyEpisodePage>
     }
   }
 
-  Future replay() {
+  void replay() {
     if (isPlaying) {
       double _s = positionNum - (durationNum / 20.00);
       if (_s <= 0.0) {
@@ -61,7 +61,7 @@ class _MyEpisodePageState extends State<MyEpisodePage>
     }
   }
 
-  Future stop() {
+  void stop() {
     audioPlayer.stop();
     setState(() {
       playerState = PlayerState.stopped;

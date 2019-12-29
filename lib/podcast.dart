@@ -71,7 +71,7 @@ class Podcast {
   List<Episode> get episodes {
     var eps = List<Episode>();
     for (XmlElement e in doc.findAllElements("item")) {
-      var _episode_cover_url = "";
+      var _episodeCoverUrl = "";
 
       try {
         if (e
@@ -79,13 +79,13 @@ class Podcast {
             .first
             .getAttribute("href")
             .isNotEmpty) {
-          _episode_cover_url =
+          _episodeCoverUrl =
               e.findElements("itunes:image").first.getAttribute("href");
         } else {
-          _episode_cover_url = this.logoUrl;
+          _episodeCoverUrl = this.logoUrl;
         }
       } catch (e) {
-        _episode_cover_url = this.logoUrl;
+        _episodeCoverUrl = this.logoUrl;
       }
 
       eps.add(
@@ -94,7 +94,7 @@ class Podcast {
           e.findElements("description").first.text,
           e.findElements("pubDate").first.text,
           e.findElements("enclosure").first.getAttribute("url"),
-          _episode_cover_url,
+          _episodeCoverUrl,
         ),
       );
     }
