@@ -168,6 +168,7 @@ class _MyEpisodePageState extends State<MyEpisodePage>
                                               ),
                                               onPressed: () {
                                                 stop();
+                                                Navigator.pop(context);
                                               },
                                             ),
                                             FlatButton(

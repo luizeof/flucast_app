@@ -65,10 +65,10 @@ double playerProgress() {
   }
 }
 
-  Icon episodeIcon() {
-    return Icon(
-      (isPlaying == true ? Icons.pause : Icons.play_arrow),
-      color: Colors.green,
-      size: 50,
-    );
-  }
+Icon episodeIcon() {
+  return Icon(
+    (isPlaying == true ? Icons.pause : Icons.play_arrow),
+    color: Colors.green,
+    size: 40,
+  );
+}

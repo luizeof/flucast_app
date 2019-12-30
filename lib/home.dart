@@ -131,8 +131,6 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-
-
   Widget _buildDefaultEpisode(Podcast __podcast, Episode __episode) {
     return Card(
       child: Column(
@@ -153,8 +151,6 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ],
             ),
-            trailing: 
-              episodeIcon(),
             onTap: () {
               setState(
                 () {
@@ -163,12 +159,9 @@ class _MyHomePageState extends State<MyHomePage>
               );
               if (isPlaying) {
                 stop();
-                play();
-                Navigator.pushNamed(context, '/detail');
-              } else {
-                play();
-                Navigator.pushNamed(context, '/detail');
               }
+              play();
+              Navigator.pushNamed(context, '/detail');
             },
           ),
         ],
@@ -237,11 +230,7 @@ class _MyHomePageState extends State<MyHomePage>
                                 Divider(),
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.play_arrow,
-                                      color: Colors.green,
-                                      size: 33,
-                                    ),
+                                    episodeIcon(),
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.only(
