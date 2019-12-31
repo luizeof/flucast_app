@@ -36,6 +36,7 @@ class FluCastAppState extends State<FluCastApp> {
         primarySwatch: Colors.blue,
       ),
       home: new MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
