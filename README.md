@@ -59,7 +59,9 @@ Open the configuration file [ios/Runner/Info.plist](https://github.com/luizeof/f
 
 ## Setting Up App Icon
 
-FluCast default icon <img align="left" width="48" height="48" src="lib/icon/app_icon.png"> is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it to your brand. After change the app icon, you need to run this command on app root directory:
+FluCast default icon <img align="left" width="48" height="48" src="lib/icon/app_icon.png"> is located at [lib/icon/app_icon.png](https://github.com/luizeof/flucast_app/blob/master/lib/icon/app_icon.png) and you can change it.
+
+After change the app icon, you need to run this command on app root directory:
 
 ```bash
  flutter pub get
@@ -78,6 +80,10 @@ FluCast default icon <img align="left" width="48" height="48" src="lib/icon/app_
 - html (https://pub.dev/packages/html)
 - audioplayer (https://pub.dev/packages/audioplayer)
 - flutter_volume (https://pub.dev/packages/flutter_volume)
+- package_info (https://pub.dev/packages/package_info)
+- global_configuration (https://pub.dev/packages/global_configuration)
+- path_provider (https://pub.dev/packages/path_provider)
+- usage (https://pub.dev/packages/usage)
 
 ## Resources
 
