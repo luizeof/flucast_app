@@ -15,23 +15,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-import 'package:audioplayer/audioplayer.dart';
-import 'package:flucast_app/podcast.dart';
-import 'package:flucast_app/detail.dart';
-import 'package:flucast_app/feed.dart';
-import 'package:flucast_app/global.dart';
 import 'package:flucast_app/home.dart';
 import 'package:flutter/material.dart';
 
-Future<Podcast> loadPodcast() async {
-  Podcast p = await Podcast.newFromURL(podcastFeedUrl.toString());
-  return p;
-}
-
-void main() async {
-  myPodcast = await loadPodcast();
+void main() {
   runApp(FluCastApp());
-  audioPlayer = new AudioPlayer();
 }
 
 class FluCastApp extends StatefulWidget {
@@ -47,11 +35,7 @@ class FluCastAppState extends State<FluCastApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => new MyHomePage(),
-        '/detail': (context) => new MyEpisodePage(),
-      },
+      home: new MyHomePage(),
     );
   }
 }

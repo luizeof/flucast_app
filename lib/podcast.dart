@@ -76,7 +76,9 @@ class Podcast {
           e.findElements("description").first.text,
           e.findElements("pubDate").first.text,
           e.findElements("enclosure").first.getAttribute("url"),
-          e.findElements("itunes:image").isNotEmpty ? e.findElements("itunes:image").first.getAttribute("href") : this.logoUrl,
+          e.findElements("itunes:image").isNotEmpty
+              ? e.findElements("itunes:image").first.getAttribute("href")
+              : this.logoUrl,
         ),
       );
     }

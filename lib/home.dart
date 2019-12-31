@@ -16,11 +16,20 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 import 'dart:async';
+import 'dart:ui';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flucast_app/episode.dart';
 import 'package:flucast_app/podcast.dart';
-import 'package:flucast_app/global.dart';
+import 'package:usage/usage_io.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:global_configuration/global_configuration.dart';
+import 'package:html/parser.dart' show parse;
+
+typedef void OnError(Exception exception);
+
+enum PlayerState { stopped, playing, paused }
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -29,10 +38,84 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
+  Episode _episode;
+
+  AudioPlayer audioPlayer;
+
+  PlayerState playerState = PlayerState.stopped;
+
+  Duration duration;
+
+  Duration position;
+
+  StreamSubscription positionSubscription;
+
+  StreamSubscription audioPlayerStateSubscription;
+
+  bool isMuted = false;
+
+  get isPlaying => playerState == PlayerState.playing;
+  get isPaused => playerState == PlayerState.paused;
+  get durationText =>
+      duration != null ? duration.toString().split('.').first : '';
+  get positionText =>
+      position != null ? position.toString().split('.').first : '';
+  get positionNum => position != null ? position.inSeconds : 0;
+  get durationNum => duration != null ? duration.inSeconds : 0;
+
+  double playerProgress() {
+    try {
+      if (positionNum > 0 && durationNum > 0) {
+        return (((positionNum / durationNum) - 1.00)) + 1.00;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  Icon episodeIcon() {
+    return Icon(
+      (isPlaying == true ? Icons.pause : Icons.play_arrow),
+      color: Colors.green,
+      size: 40,
+    );
+  }
+
+  Future<AnalyticsIO> _gaSettings() async {
+    await GlobalConfiguration().loadFromAsset("app_settings");
+    var _packageInfo = await PackageInfo.fromPlatform();
+    var _ga = new AnalyticsIO(
+      GlobalConfiguration().getString("ga"),
+      _packageInfo.appName.toString(),
+      _packageInfo.version.toString(),
+      documentDirectory: await getApplicationDocumentsDirectory(),
+    );
+    _ga.analyticsOpt = AnalyticsOpt.optOut;
+    return _ga;
+  }
+
+  void gaRegisterScreen(String _screenName) async {
+    var _ga = await _gaSettings();
+    await _ga.sendScreenView(_screenName);
+  }
+
+  void gaRegisterEvent(String _eventCategory, String _eventName) async {
+    var _ga = await _gaSettings();
+    await _ga.sendEvent(_eventCategory, _eventName);
+  }
+
+  Future<Podcast> loadPodcast() async {
+    await GlobalConfiguration().loadFromAsset("app_settings");
+    return await Podcast.newFromURL(GlobalConfiguration().getString("feed"));
+  }
+
   @override
   void initState() {
     super.initState();
     initAudioPlayer();
+    gaRegisterScreen("home");
   }
 
   @override
@@ -48,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void initAudioPlayer() {
+    audioPlayer = new AudioPlayer();
     positionSubscription = audioPlayer.onAudioPositionChanged
         .listen((p) => setState(() => position = p));
     audioPlayerStateSubscription = audioPlayer.onPlayerStateChanged.listen((s) {
@@ -68,27 +152,55 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
-  Future play() async {
-    await audioPlayer.play(currentEpisode.url.toString());
+  void play() {
+    audioPlayer.play(_episode.url.toString());
     setState(() {
+      position = new Duration();
+      duration = new Duration();
       playerState = PlayerState.playing;
     });
-    print("play..." + currentEpisode.title.toString());
+    gaRegisterEvent("player", "play");
   }
 
-  Future pause() async {
-    await audioPlayer.pause();
+  void pause() {
+    audioPlayer.pause();
     setState(() => playerState = PlayerState.paused);
-    print("pause...");
+    gaRegisterEvent("player", "pause");
   }
 
-  Future stop() async {
-    await audioPlayer.stop();
+  void seek() {
+    if (isPlaying) {
+      double _s = positionNum + (durationNum / 20.00);
+      if (_s >= double.parse(durationNum.toString())) {
+        audioPlayer.seek(durationNum);
+      } else {
+        audioPlayer.seek(_s);
+      }
+    }
+    gaRegisterEvent("player", "seek");
+  }
+
+  void replay() {
+    if (isPlaying) {
+      double _s = positionNum - (durationNum / 20.00);
+      if (_s <= 0.0) {
+        audioPlayer.seek(0);
+      } else {
+        audioPlayer.seek(_s);
+      }
+    }
+    gaRegisterEvent("player", "replay");
+  }
+
+  void stop() {
+    audioPlayer.stop();
     setState(() {
       playerState = PlayerState.stopped;
       position = new Duration();
+      duration = new Duration();
+      _episode = null;
     });
-    print("stop...");
+    gaRegisterEvent("player", "stop");
   }
 
   Future mute(bool muted) async {
@@ -97,11 +209,12 @@ class _MyHomePageState extends State<MyHomePage>
       isMuted = muted;
     });
     print("mute...");
+    gaRegisterEvent("player", "mute");
   }
 
   Widget _buildEpisodeTitle(Episode __episode) {
-    if (currentEpisode != null) {
-      if (currentEpisode.title == __episode.title) {
+    if (_episode != null) {
+      if (_episode.title == __episode.title) {
         return Padding(
           padding: EdgeInsets.only(
             left: 15,
@@ -118,10 +231,7 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         );
       } else {
-        return Text(
-          __episode.title,
-          softWrap: true,
-        );
+        return Text(__episode.title, softWrap: true);
       }
     } else {
       return Text(
@@ -154,14 +264,13 @@ class _MyHomePageState extends State<MyHomePage>
             onTap: () {
               setState(
                 () {
-                  currentEpisode = __episode;
+                  _episode = __episode;
                 },
               );
               if (isPlaying) {
                 stop();
               }
               play();
-              Navigator.pushNamed(context, '/detail');
             },
           ),
         ],
@@ -169,129 +278,8 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  Widget _buildEpisodeRow(Podcast __podcast, Episode __episode) {
-    Size size = MediaQuery.of(context).size;
-    if (__podcast.episodes.isNotEmpty) {
-      if (currentEpisode != null) {
-        if (currentEpisode.title == __episode.title) {
-          return Center(
-            child: Card(
-              shape: new RoundedRectangleBorder(
-                side: new BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                      top: 30,
-                      bottom: 30,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          currentEpisode = __episode;
-                        });
-                        play();
-                        Navigator.pushNamed(context, '/detail');
-                      },
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Row(
-                              children: [
-                                Image.network(
-                                  currentEpisode.cover,
-                                  fit: BoxFit.contain,
-                                  width: size.width / 4.0,
-                                  height: size.width / 4.0,
-                                ),
-                                Expanded(
-                                  child: _buildEpisodeTitle(__episode),
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Divider(),
-                                Center(
-                                  child: Text(
-                                    __episode.pubDate.toString(),
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Divider(),
-                                Row(
-                                  children: [
-                                    episodeIcon(),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 15,
-                                          right: 15,
-                                        ),
-                                        child: LinearProgressIndicator(
-                                          value: playerProgress(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                        positionText.toString(),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        durationText.toString(),
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return _buildDefaultEpisode(__podcast, __episode);
-        }
-      } else {
-        return _buildDefaultEpisode(__podcast, __episode);
-      }
-    } else {
-      return Center(
-        child: Icon(
-          Icons.audiotrack,
-          size: 55,
-          color: Colors.greenAccent,
-        ),
-      );
-    }
-  }
-
-  Widget _podcastDetails() {
-    if (myPodcast.runtimeType == Podcast) {
+  Widget _podcastDetails(Podcast _podcast) {
+    if (_podcast.runtimeType == Podcast) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
@@ -315,7 +303,7 @@ class _MyHomePageState extends State<MyHomePage>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Image.network(
-                          myPodcast.logoUrl,
+                          _podcast.logoUrl,
                           fit: BoxFit.fill,
                         ),
                       ],
@@ -330,7 +318,7 @@ class _MyHomePageState extends State<MyHomePage>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            myPodcast.description.toString(),
+                            _podcast.description.toString(),
                             style: TextStyle(fontSize: 17),
                             strutStyle: StrutStyle(
                               fontSize: 34,
@@ -358,9 +346,8 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  Widget _podcatEpisodesList() {
-    int _num =
-        (myPodcast.runtimeType == Podcast ? myPodcast.episodes.length : 0);
+  Widget _podcatEpisodesList(Podcast _podcast) {
+    int _num = (_podcast.runtimeType == Podcast ? _podcast.episodes.length : 0);
 
     if (_num > 0) {
       return Column(
@@ -372,9 +359,9 @@ class _MyHomePageState extends State<MyHomePage>
                 BuildContext ctxt,
                 int i,
               ) {
-                return _buildEpisodeRow(
-                  myPodcast,
-                  myPodcast.episodes[i],
+                return _buildDefaultEpisode(
+                  _podcast,
+                  _podcast.episodes[i],
                 );
               },
             ),
@@ -392,40 +379,288 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text(
-              (myPodcast.runtimeType == Podcast ? myPodcast.title : "FluCast"),
+  Widget _buildPlayEpisode(Podcast _podcast, Episode _episode) {
+    gaRegisterScreen("detail");
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints viewportConstraints) {
+        Size size = MediaQuery.of(context).size;
+        double progressHeight = 30;
+        double minHeight = (viewportConstraints.maxHeight - progressHeight);
+        double iconSize = 40;
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: minHeight,
+            ),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      Container(
+                        color: Colors.blue,
+                        width: size.width,
+                        height: minHeight,
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              width: size.width,
+                              height: size.height,
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Spacer(),
+                                    Image.network(
+                                      _episode.cover,
+                                      fit: BoxFit.contain,
+                                      width: size.width / 2.0,
+                                      height: size.width / 2.0,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      _episode.title,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      margin: EdgeInsets.all(0),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            FlatButton(
+                                              child: Icon(
+                                                (isPlaying == true
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow),
+                                                color: Colors.white,
+                                                size: iconSize,
+                                              ),
+                                              onPressed: () {
+                                                if (isPlaying) {
+                                                  pause();
+                                                } else {
+                                                  play();
+                                                }
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: Icon(
+                                                Icons.stop,
+                                                color: Colors.white,
+                                                size: iconSize,
+                                              ),
+                                              onPressed: () {
+                                                stop();
+                                                setState(() {
+                                                  _episode = null;
+                                                });
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: Icon(
+                                                Icons.forward_30,
+                                                color: Colors.white,
+                                                size: iconSize,
+                                              ),
+                                              onPressed: () {
+                                                seek();
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: Icon(
+                                                Icons.replay_30,
+                                                color: Colors.white,
+                                                size: iconSize,
+                                              ),
+                                              onPressed: () {
+                                                replay();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                              positionText.toString(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: "Roboto",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                              durationText.toString(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: "Roboto",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: progressHeight,
+                        width: viewportConstraints.maxWidth,
+                        child: LinearProgressIndicator(
+                          value: playerProgress(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(5),
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Wrap(
+                      children: [
+                        Center(
+                          child: Text(
+                            _episode.pubDate.toString(),
+                            softWrap: true,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: "Roboto",
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          parse(
+                            _episode.description.toString().replaceAll(
+                                  '<p>',
+                                  '\n<p>',
+                                ),
+                          ).documentElement.text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                            fontFamily: "Roboto",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          bottom: TabBar(
-            tabs: <Tab>[
-              Tab(text: 'Sobre'),
-              Tab(text: 'Episódios'),
+        );
+      },
+    );
+  }
+
+  Widget _buildHome(Podcast _podcast) {
+    if (_episode != null) {
+      return _buildPlayEpisode(_podcast, _episode);
+    } else {
+      return TabBarView(
+        children: [
+          _podcastDetails(_podcast),
+          _podcatEpisodesList(_podcast),
+        ].toList(),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Podcast>(
+      future: loadPodcast(), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<Podcast> snapshot) {
+        if (snapshot.hasData) {
+          return DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                title: Center(
+                  child: Text(
+                    (snapshot.data.runtimeType == Podcast
+                        ? snapshot.data.title
+                        : "FluCast"),
+                  ),
+                ),
+                bottom: TabBar(
+                  tabs: <Tab>[
+                    Tab(text: 'Sobre'),
+                    Tab(text: 'Episódios'),
+                  ],
+                ),
+              ),
+              body: _buildHome(snapshot.data),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Column(
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              ),
             ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _podcastDetails(),
-            _podcatEpisodesList(),
-          ].toList(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              myPodcast = myPodcast;
-            });
-          },
-          tooltip: 'Update Feed',
-          child: Icon(Icons.refresh),
-        ),
-      ),
+          );
+        } else {
+          return Scaffold(
+            body: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
