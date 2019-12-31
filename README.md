@@ -19,15 +19,21 @@ FluCast has the most features that you need to play your show:
 - [x] Play, Pause and Stop
 - [x] 30 Seconds Seek
 - [x] Episode Description
+- [x] Google Analytics Tracking
 
 See more at [changelog.md](https://github.com/luizeof/flucast_app/blob/master/CHANGELOG.md).
 
 ## Setting Up Feed
 
-Just change the `podcastFeedUrl` located on [feed.dart](https://github.com/luizeof/flucast_app/blob/master/lib/feed.dart) file with a [Valid Podcast RSS Feed](https://developers.google.com/search/reference/podcast/rss-feed).
+Just change the key `feed` located at [`assets/cfg/app_settings.json`](https://github.com/luizeof/flucast_app/blob/master/assets/cfg/app_settings.json) file with a [Valid Podcast RSS Feed](https://developers.google.com/search/reference/podcast/rss-feed).
 
-```dart
-final podcastFeedUrl = 'https://anchor.fm/s/848f2e4/podcast/rss';
+The key `ga` enable [Google Analytics App Tracking](https://support.google.com/analytics/answer/2587086).
+
+```json
+{
+  "feed": "https://anchor.fm/s/848f2e4/podcast/rss",
+  "ga": "UA-00000000-1"
+}
 ```
 
 ## Setting Up App Name
@@ -61,9 +67,9 @@ FluCast default icon <img align="left" width="48" height="48" src="lib/icon/app_
 ```
 
 ## Screens
-Home | Episodes | Playing | Details
----- | ---- | ---- | ----
-<img align="left" src="docs/home.png"> |  <img align="left" src="docs/episodes.png"> |  <img align="left" src="docs/playing.png"> |  <img align="left" src="docs/details.png">
+| Home                                   | Episodes                                   | Playing                                   | Details                                   |
+| -------------------------------------- | ------------------------------------------ | ----------------------------------------- | ----------------------------------------- |
+| <img align="left" src="docs/home.png"> | <img align="left" src="docs/episodes.png"> | <img align="left" src="docs/playing.png"> | <img align="left" src="docs/details.png"> |
 
 ## Dependencies
 
