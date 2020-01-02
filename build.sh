@@ -11,7 +11,7 @@ echo "major: $minor"
 echo "major: $patch"
 echo "build: $build"
 
-fluter pub get
+flutter pub get
 
 flutter clean
 
