@@ -26,6 +26,7 @@ import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:flucast_app/youtube.dart';
 
 typedef void OnError(Exception exception);
 
@@ -109,6 +110,12 @@ class _MyHomePageState extends State<MyHomePage>
   Future<Podcast> loadPodcast() async {
     await GlobalConfiguration().loadFromAsset("app_settings");
     return await Podcast.newFromURL(GlobalConfiguration().getString("feed"));
+  }
+
+  Future<List<YoutubeVideo>> loadVideos() async {
+    var _yc = new YoutubeChannel();
+
+    return await _yc.getVideos();
   }
 
   @override
@@ -609,9 +616,41 @@ class _MyHomePageState extends State<MyHomePage>
         children: [
           _podcastDetails(_podcast),
           _podcatEpisodesList(_podcast),
+          Text(""),
         ].toList(),
       );
     }
+  }
+
+  Widget buildLoading() {
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        CircularProgressIndicator(),
+      ]),
+    );
+  }
+
+  Widget buildError() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Icon(
+            Icons.error_outline,
+            color: Colors.red,
+            size: 60,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text('Verifique a conexão com a Internet.'),
+          ),
+          Spacer(),
+          CircularProgressIndicator(),
+          Spacer(),
+        ],
+      ),
+    );
   }
 
   @override
@@ -621,7 +660,7 @@ class _MyHomePageState extends State<MyHomePage>
       builder: (BuildContext context, AsyncSnapshot<Podcast> snapshot) {
         if (snapshot.hasData) {
           return DefaultTabController(
-            length: 2,
+            length: 3,
             child: Scaffold(
               appBar: AppBar(
                 title: Center(
@@ -634,7 +673,8 @@ class _MyHomePageState extends State<MyHomePage>
                 bottom: TabBar(
                   tabs: <Tab>[
                     Tab(text: 'Sobre'),
-                    Tab(text: 'Episódios'),
+                    Tab(text: 'Podcasts'),
+                    Tab(text: 'Vídeos'),
                   ],
                 ),
               ),
@@ -643,36 +683,11 @@ class _MyHomePageState extends State<MyHomePage>
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('Verifique a conexão com a Internet.'),
-                  ),
-                  Spacer(),
-                  CircularProgressIndicator(),
-                  Spacer(),
-                ],
-              ),
-            ),
+            body: buildError(),
           );
         } else {
           return Scaffold(
-            body: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                  ]),
-            ),
+            body: buildLoading(),
           );
         }
       },
