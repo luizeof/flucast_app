@@ -642,22 +642,37 @@ class _MyHomePageState extends State<MyHomePage>
             ),
           );
         } else if (snapshot.hasError) {
-          return Column(
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Verifique a conexão com a Internet.'),
+                  ),
+                  Spacer(),
+                  CircularProgressIndicator(),
+                  Spacer(),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            ],
+            ),
           );
         } else {
           return Scaffold(
-            body: CircularProgressIndicator(),
+            body: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ]),
+            ),
           );
         }
       },
