@@ -13,8 +13,6 @@ echo "build: $build"
 
 echo "$major.$minor.$patch+$build" >version/VERSION
 
-echo "building: $major.$minor.$patch+$build"
-
 flutter pub get
 
 flutter clean
@@ -22,3 +20,5 @@ flutter clean
 flutter build apk --build-name=$major.$minor.$patch --build-number=$build
 
 flutter build appbundle --target-platform android-arm,android-arm64,android-x64 --build-name=$major.$minor.$patch --build-number=$build
+
+echo "build: $major.$minor.$patch+$build"
