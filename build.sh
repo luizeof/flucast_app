@@ -11,4 +11,10 @@ echo "major: $minor"
 echo "major: $patch"
 echo "build: $build"
 
+fluter pub get
+
+flutter clean
+
+flutter build apk --build-name=$major.$minor.$patch --build-number=$build
+
 flutter build appbundle --target-platform android-arm,android-arm64,android-x64
