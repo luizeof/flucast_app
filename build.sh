@@ -17,4 +17,4 @@ flutter clean
 
 flutter build apk --build-name=$major.$minor.$patch --build-number=$build
 
-flutter build appbundle --target-platform android-arm,android-arm64,android-x64
+flutter build appbundle --target-platform android-arm,android-arm64,android-x64 --build-name=$major.$minor.$patch --build-number=$build
