@@ -630,7 +630,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  Widget buildError() {
+  Widget buildError(String message) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -643,7 +643,7 @@ class _MyHomePageState extends State<MyHomePage>
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Text('Verifique a conexão com a Internet.'),
+            child: Text('Erro: ' + message),
           ),
           Spacer(),
           CircularProgressIndicator(),
@@ -683,7 +683,7 @@ class _MyHomePageState extends State<MyHomePage>
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            body: buildError(),
+            body: buildError(snapshot.error.toString()),
           );
         } else {
           return Scaffold(
@@ -723,7 +723,7 @@ class _MyHomePageState extends State<MyHomePage>
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            body: buildError(),
+            body: buildError(snapshot.error.toString()),
           );
         } else {
           return Scaffold(
