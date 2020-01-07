@@ -76,15 +76,15 @@ After change the app icon, you need to run this command on app root directory:
 
 ## Dependencies
 
-- flutter_launcher_icons [https://pub.dev/packages/flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
-- dart_pod [https://pub.dev/packages/dart_pod](https://pub.dev/packages/dart_pod)
-- html [https://pub.dev/packages/html](https://pub.dev/packages/html)
-- audioplayer [https://pub.dev/packages/audioplayer](https://pub.dev/packages/audioplayer)
-- flutter_volume [https://pub.dev/packages/flutter_volume](https://pub.dev/packages/flutter_volume)
-- package_info [https://pub.dev/packages/package_info](https://pub.dev/packages/package_info)
-- global_configuration [https://pub.dev/packages/global_configuration](https://pub.dev/packages/global_configuration)
-- path_provider [https://pub.dev/packages/path_provider](https://pub.dev/packages/path_provider)
-- usage [https://pub.dev/packages/usage](https://pub.dev/packages/usage)
+- flutter_launcher_icons / [https://pub.dev/packages/flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
+- dart_pod / [https://pub.dev/packages/dart_pod](https://pub.dev/packages/dart_pod)
+- html / [https://pub.dev/packages/html](https://pub.dev/packages/html)
+- audioplayer / [https://pub.dev/packages/audioplayer](https://pub.dev/packages/audioplayer)
+- flutter_volume / [https://pub.dev/packages/flutter_volume](https://pub.dev/packages/flutter_volume)
+- package_info / [https://pub.dev/packages/package_info](https://pub.dev/packages/package_info)
+- global_configuration / [https://pub.dev/packages/global_configuration](https://pub.dev/packages/global_configuration)
+- path_provider / [https://pub.dev/packages/path_provider](https://pub.dev/packages/path_provider)
+- usage / [https://pub.dev/packages/usage](https://pub.dev/packages/usage)
 
 ## Resources
 
