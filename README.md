@@ -87,10 +87,6 @@ After change the app icon, you need to run this command on app root directory:
 - usage / [https://pub.dev/packages/usage](https://pub.dev/packages/usage)
 - http / [https://pub.dev/packages/http](https://pub.dev/packages/http)
 
-## Resources
-
-- Default App Icon (https://www.flaticon.com/free-icon/record_1064911)
-
 ## How to Contribute
 
 - Fork the the project
