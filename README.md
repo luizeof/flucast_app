@@ -8,6 +8,8 @@ Have you always wanted an exclusive app for your Podcast? Now you can customize 
 
 Simply configure your Podcast feed, tweak the app icon, build and make it available in stores.
 
+Featured at [https://itsallwidgets.com/flucast](https://itsallwidgets.com/flucast).
+
 ## Main Features
 
 FluCast has the most features that you need to play your show:
