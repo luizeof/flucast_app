@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ ! -d version/ ]; then
+    mkdir version
+fi
+
 if [ -f version/MAJOR ]; then
     major=$(cat version/MAJOR)
 else
