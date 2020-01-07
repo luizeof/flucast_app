@@ -616,7 +616,6 @@ class _MyHomePageState extends State<MyHomePage>
         children: [
           _podcastDetails(_podcast),
           _podcatEpisodesList(_podcast),
-          Text(""),
         ].toList(),
       );
     }
