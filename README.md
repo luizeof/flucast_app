@@ -85,6 +85,7 @@ After change the app icon, you need to run this command on app root directory:
 - global_configuration / [https://pub.dev/packages/global_configuration](https://pub.dev/packages/global_configuration)
 - path_provider / [https://pub.dev/packages/path_provider](https://pub.dev/packages/path_provider)
 - usage / [https://pub.dev/packages/usage](https://pub.dev/packages/usage)
+- http / [https://pub.dev/packages/http](https://pub.dev/packages/http)
 
 ## Resources
 
