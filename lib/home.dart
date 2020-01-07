@@ -660,7 +660,7 @@ class _MyHomePageState extends State<MyHomePage>
       builder: (BuildContext context, AsyncSnapshot<Podcast> snapshot) {
         if (snapshot.hasData) {
           return DefaultTabController(
-            length: 3,
+            length: 2,
             child: Scaffold(
               appBar: AppBar(
                 title: Center(
@@ -674,47 +674,6 @@ class _MyHomePageState extends State<MyHomePage>
                   tabs: <Tab>[
                     Tab(text: 'Sobre'),
                     Tab(text: 'Podcasts'),
-                    Tab(text: 'Vídeos'),
-                  ],
-                ),
-              ),
-              body: _buildHome(snapshot.data),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: buildError(snapshot.error.toString()),
-          );
-        } else {
-          return Scaffold(
-            body: buildLoading(),
-          );
-        }
-      },
-    );
-  }
-
-  Widget build2(BuildContext context) {
-    return FutureBuilder<Podcast>(
-      future: loadPodcast(), // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<Podcast> snapshot) {
-        if (snapshot.hasData) {
-          return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Center(
-                  child: Text(
-                    (snapshot.data.runtimeType == Podcast
-                        ? snapshot.data.title
-                        : "FluCast"),
-                  ),
-                ),
-                bottom: TabBar(
-                  tabs: <Tab>[
-                    Tab(text: 'Sobre'),
-                    Tab(text: 'Podcasts'),
-                    Tab(text: 'Vídeos'),
                   ],
                 ),
               ),
