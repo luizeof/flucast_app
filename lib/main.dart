@@ -31,10 +31,23 @@ class FluCastAppState extends State<FluCastApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FluCast',
+      title: 'WordCast',
+      themeMode: ThemeMode.dark,
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          textTheme: TextTheme(
+            body1: TextStyle(
+              color: Colors.black,
+            ),
+            body2: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          primaryColor: Colors.blue,
+          primaryColorDark: Colors.black,
+          appBarTheme: AppBarTheme(
+            color: Colors.blue,
+          )),
       home: new MyHomePage(),
       debugShowCheckedModeBanner: false,
     );

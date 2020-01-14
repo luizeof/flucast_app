@@ -17,9 +17,11 @@
 //
 import 'dart:async';
 import 'dart:ui';
+import 'dart:math';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flucast_app/episode.dart';
 import 'package:flucast_app/podcast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:usage/usage_io.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -27,6 +29,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:flucast_app/youtube.dart';
+import 'package:wave_progress_bars/wave_progress_bars.dart';
 
 typedef void OnError(Exception exception);
 
@@ -56,12 +59,17 @@ class _MyHomePageState extends State<MyHomePage>
   bool isMuted = false;
 
   get isPlaying => playerState == PlayerState.playing;
+
   get isPaused => playerState == PlayerState.paused;
+
   get durationText =>
       duration != null ? duration.toString().split('.').first : '';
+
   get positionText =>
       position != null ? position.toString().split('.').first : '';
+
   get positionNum => position != null ? position.inSeconds : 0;
+
   get durationNum => duration != null ? duration.inSeconds : 0;
 
   double playerProgress() {
@@ -162,6 +170,8 @@ class _MyHomePageState extends State<MyHomePage>
   void play() {
     audioPlayer.play(_episode.url.toString());
     setState(() {
+      values.clear();
+      values.add(1);
       position = new Duration();
       duration = new Duration();
       playerState = PlayerState.playing;
@@ -202,6 +212,8 @@ class _MyHomePageState extends State<MyHomePage>
   void stop() {
     audioPlayer.stop();
     setState(() {
+      values.clear();
+      values.add(1);
       playerState = PlayerState.stopped;
       position = new Duration();
       duration = new Duration();
@@ -238,7 +250,10 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         );
       } else {
-        return Text(__episode.title, softWrap: true);
+        return Text(
+          __episode.title,
+          softWrap: true,
+        );
       }
     } else {
       return Text(
@@ -386,226 +401,173 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
+  void _buildWaves() {
+    var rng = new Random();
+    for (var i = 0; values.length <= 75; i++) {
+      var j = rng.nextInt(60) * 1.0;
+      values.add(j);
+    }
+  }
+
   Widget _buildPlayEpisode(Podcast _podcast, Episode _episode) {
+    _buildWaves();
     gaRegisterScreen("detail");
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints viewportConstraints) {
-        Size size = MediaQuery.of(context).size;
-        double progressHeight = 30;
-        double minHeight = (viewportConstraints.maxHeight - progressHeight);
-        double iconSize = 40;
-        return SingleChildScrollView(
-          child: ConstrainedBox(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      double minHeight = viewportConstraints.maxHeight;
+      double maxWidth = viewportConstraints.maxWidth;
+      double iconSize = 35;
+      return SingleChildScrollView(
+        child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: minHeight,
             ),
             child: Column(
-              children: <Widget>[
+              children: [
                 Container(
-                  margin: EdgeInsets.all(0),
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.blue,
-                        width: size.width,
-                        height: minHeight,
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              width: size.width,
-                              height: size.height,
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Spacer(),
-                                    Image.network(
-                                      _episode.cover,
-                                      fit: BoxFit.contain,
-                                      width: size.width / 2.0,
-                                      height: size.width / 2.0,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      _episode.title,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Container(
-                                      margin: EdgeInsets.all(0),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: <Widget>[
-                                            FlatButton(
-                                              child: Icon(
-                                                (isPlaying == true
-                                                    ? Icons.pause
-                                                    : Icons.play_arrow),
-                                                color: Colors.white,
-                                                size: iconSize,
-                                              ),
-                                              onPressed: () {
-                                                if (isPlaying) {
-                                                  pause();
-                                                } else {
-                                                  play();
-                                                }
-                                              },
-                                            ),
-                                            FlatButton(
-                                              child: Icon(
-                                                Icons.stop,
-                                                color: Colors.white,
-                                                size: iconSize,
-                                              ),
-                                              onPressed: () {
-                                                stop();
-                                                setState(() {
-                                                  _episode = null;
-                                                });
-                                              },
-                                            ),
-                                            FlatButton(
-                                              child: Icon(
-                                                Icons.forward_30,
-                                                color: Colors.white,
-                                                size: iconSize,
-                                              ),
-                                              onPressed: () {
-                                                seek();
-                                              },
-                                            ),
-                                            FlatButton(
-                                              child: Icon(
-                                                Icons.replay_30,
-                                                color: Colors.white,
-                                                size: iconSize,
-                                              ),
-                                              onPressed: () {
-                                                replay();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Container(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(6),
-                                            child: Text(
-                                              positionText.toString(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontFamily: "Roboto",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(6),
-                                            child: Text(
-                                              durationText.toString(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontFamily: "Roboto",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                  ],
+                  color: Theme.of(context).primaryColor,
+                  height: minHeight,
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.network(
+                            _episode.cover,
+                            fit: BoxFit.contain,
+                            width: maxWidth / 3,
+                            height: maxWidth / 3,
+                          ),
+                          Text(
+                            _episode.title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              FlatButton(
+                                child: Icon(
+                                  (isPlaying == true
+                                      ? Icons.pause
+                                      : Icons.play_arrow),
+                                  color: Colors.white,
+                                  size: iconSize,
+                                ),
+                                onPressed: () {
+                                  if (isPlaying) {
+                                    pause();
+                                  } else {
+                                    play();
+                                  }
+                                },
+                              ),
+                              FlatButton(
+                                child: Icon(
+                                  Icons.stop,
+                                  color: Colors.white,
+                                  size: iconSize,
+                                ),
+                                onPressed: () {
+                                  stop();
+                                  setState(() {
+                                    _episode = null;
+                                  });
+                                },
+                              ),
+                              FlatButton(
+                                child: Icon(
+                                  Icons.forward_30,
+                                  color: Colors.white,
+                                  size: iconSize,
+                                ),
+                                onPressed: () {
+                                  seek();
+                                },
+                              ),
+                              FlatButton(
+                                child: Icon(
+                                  Icons.replay_30,
+                                  color: Colors.white,
+                                  size: iconSize,
+                                ),
+                                onPressed: () {
+                                  replay();
+                                },
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                positionText.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: "Roboto",
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: progressHeight,
-                        width: viewportConstraints.maxWidth,
-                        child: LinearProgressIndicator(
-                          value: playerProgress(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(5),
-                  child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Wrap(
-                      children: [
-                        Center(
-                          child: Text(
-                            _episode.pubDate.toString(),
-                            softWrap: true,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontFamily: "Roboto",
-                            ),
-                            textAlign: TextAlign.center,
+                              Text(
+                                durationText.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: "Roboto",
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                          ClipRect(
+                            clipBehavior: Clip.hardEdge,
+                            child: Padding(
+                              padding: EdgeInsets.all(3),
+                              child: WaveProgressBar(
+                                progressPercentage: playerProgress() * 100.00,
+                                listOfHeights: values,
+                                initalColor: Colors.white,
+                                width: MediaQuery.of(context).size.width,
+                                progressColor: Colors.green,
+                                backgroundColor: Theme.of(context).primaryColor,
+                                timeInMilliSeconds: 2000,
+                                isHorizontallyAnimated: true,
+                                isVerticallyAnimated: true,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.all(10),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          parse(
-                            _episode.description.toString().replaceAll(
-                                  '<p>',
-                                  '\n<p>',
-                                ),
-                          ).documentElement.text,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontFamily: "Roboto",
+                  child: Text(
+                    parse(
+                      _episode.description.toString().replaceAll(
+                            '<p>',
+                            '\n<p>',
                           ),
-                        ),
-                      ],
+                    ).documentElement.text,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "Roboto",
                     ),
                   ),
                 ),
               ],
-            ),
-          ),
-        );
-      },
-    );
+            )),
+      );
+    });
   }
 
   Widget _buildHome(Podcast _podcast) {
@@ -651,6 +613,8 @@ class _MyHomePageState extends State<MyHomePage>
       ),
     );
   }
+
+  final List<double> values = [];
 
   @override
   Widget build(BuildContext context) {
