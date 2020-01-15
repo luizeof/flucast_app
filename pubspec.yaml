@@ -23,6 +23,7 @@ dependencies:
   path_provider:
   flutter_launcher_icons:
   usage:
+  url_launcher:
   http:
   html:
   hive: ^1.3.0

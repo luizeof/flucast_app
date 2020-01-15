@@ -32,6 +32,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:flucast_app/youtube.dart';
 import 'package:wave_progress_bars/wave_progress_bars.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 typedef void OnError(Exception exception);
 
@@ -232,6 +233,14 @@ class _MyHomePageState extends State<MyHomePage>
     });
     print("mute...");
     gaRegisterEvent("player", "mute");
+  }
+
+  _openWebsite(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget _buildEpisodeTitle(Episode __episode) {
@@ -638,6 +647,13 @@ class _MyHomePageState extends State<MyHomePage>
                     : "FluCast"),
                 actions: <Widget>[
                   // action button
+                  IconButton(
+                    icon: Icon(Icons.open_in_new),
+                    onPressed: () {
+                      print(snapshot.data.homepage);
+                      _openWebsite(snapshot.data.homepage);
+                    },
+                  ),
                   IconButton(
                     icon: Icon(Icons.brightness_medium),
                     onPressed: () {
