@@ -17,6 +17,8 @@
 //
 import 'dart:async';
 import 'dart:ui';
+import 'package:provider/provider.dart';
+import 'theme.dart';
 import 'dart:math';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flucast_app/episode.dart';
@@ -573,6 +575,14 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
+  IconData _themeIicon(bool isDark) {
+    if (isDark) {
+      return Icons.wb_sunny;
+    } else {
+      return Icons.brightness_2;
+    }
+  }
+
   Widget _buildHome(Podcast _podcast) {
     if (_episode != null) {
       return _buildPlayEpisode(_podcast, _episode);
@@ -621,6 +631,8 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<DynamicTheme>(context);
+
     return FutureBuilder<Podcast>(
       future: loadPodcast(), // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<Podcast> snapshot) {
@@ -629,17 +641,25 @@ class _MyHomePageState extends State<MyHomePage>
             length: 2,
             child: Scaffold(
               appBar: AppBar(
-                title: Center(
-                  child: Text(
-                    (snapshot.data.runtimeType == Podcast
-                        ? snapshot.data.title
-                        : "FluCast"),
+                title: Text(snapshot.data.runtimeType == Podcast
+                    ? snapshot.data.title
+                    : "FluCast"),
+                actions: <Widget>[
+                  // action button
+                  IconButton(
+                    icon: Icon(_themeIicon(themeProvider.getDarkMode)),
+                    onPressed: () {
+                      setState(() {
+                        themeProvider
+                            .changeDarkMode(!themeProvider.getDarkMode);
+                      });
+                    },
                   ),
-                ),
+                ],
                 bottom: TabBar(
                   tabs: <Tab>[
-                    Tab(text: 'Sobre'),
-                    Tab(text: 'Podcasts'),
+                    Tab(text: 'Podcast'),
+                    Tab(text: 'Episódios'),
                   ],
                 ),
               ),

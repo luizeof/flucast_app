@@ -17,9 +17,22 @@
 //
 import 'package:flucast_app/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'theme.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+var currentTheme = ThemeMode.light;
 
 void main() async {
-  runApp(FluCastApp());
+  await Hive.initFlutter();
+  await Hive.openBox('flucast');
+  runApp(
+    ChangeNotifierProvider<DynamicTheme>(
+      create: (_) => DynamicTheme(),
+      child: FluCastApp(),
+    ),
+  );
 }
 
 class FluCastApp extends StatefulWidget {
@@ -30,9 +43,11 @@ class FluCastApp extends StatefulWidget {
 class FluCastAppState extends State<FluCastApp> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<DynamicTheme>(context);
+
     return MaterialApp(
       title: 'WordCast',
-      themeMode: ThemeMode.dark,
+      themeMode: themeProvider.getDarkMode ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData.dark(),
       theme: ThemeData(
           textTheme: TextTheme(
@@ -48,7 +63,7 @@ class FluCastAppState extends State<FluCastApp> {
           appBarTheme: AppBarTheme(
             color: Colors.blue,
           )),
-      home: new MyHomePage(),
+      home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
