@@ -86,9 +86,11 @@ After change the app icon, you need to run this command on app root directory:
 - package_info  [https://pub.dev/packages/package_info](https://pub.dev/packages/package_info)
 - global_configuration  [https://pub.dev/packages/global_configuration](https://pub.dev/packages/global_configuration)
 - path_provider  [https://pub.dev/packages/path_provider](https://pub.dev/packages/path_provider)
+- provider [https://pub.dev/packages/provider](https://pub.dev/packages/provider)
 - usage  [https://pub.dev/packages/usage](https://pub.dev/packages/usage)
 - http  [https://pub.dev/packages/http](https://pub.dev/packages/http)
 - url_launcher  [https://pub.dev/packages/url_launcher](https://pub.dev/packages/url_launcher)
+- hive [https://pub.dev/packages/hive](https://pub.dev/packages/hive)
 
 ## How to Contribute
 
