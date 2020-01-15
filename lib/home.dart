@@ -575,14 +575,6 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
-  IconData _themeIicon(bool isDark) {
-    if (isDark) {
-      return Icons.wb_sunny;
-    } else {
-      return Icons.brightness_2;
-    }
-  }
-
   Widget _buildHome(Podcast _podcast) {
     if (_episode != null) {
       return _buildPlayEpisode(_podcast, _episode);
@@ -647,7 +639,7 @@ class _MyHomePageState extends State<MyHomePage>
                 actions: <Widget>[
                   // action button
                   IconButton(
-                    icon: Icon(_themeIicon(themeProvider.getDarkMode)),
+                    icon: Icon(Icons.brightness_medium),
                     onPressed: () {
                       setState(() {
                         themeProvider
