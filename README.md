@@ -22,6 +22,7 @@ FluCast has the most features that you need to play your show:
 - [x] 30 Seconds Seek
 - [x] Episode Description
 - [x] Google Analytics Tracking
+- [x] Light / Dark Mode
 
 See more at [changelog.md](https://github.com/luizeof/flucast_app/blob/master/CHANGELOG.md).
 
