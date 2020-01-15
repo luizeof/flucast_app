@@ -130,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     initAudioPlayer();
+    _buildWaves();
     gaRegisterScreen("home");
   }
 
@@ -147,8 +148,10 @@ class _MyHomePageState extends State<MyHomePage>
 
   void initAudioPlayer() {
     audioPlayer = new AudioPlayer();
-    positionSubscription = audioPlayer.onAudioPositionChanged
-        .listen((p) => setState(() => position = p));
+    positionSubscription =
+        audioPlayer.onAudioPositionChanged.listen((p) => setState(() {
+              position = p;
+            }));
     audioPlayerStateSubscription = audioPlayer.onPlayerStateChanged.listen((s) {
       if (s == AudioPlayerState.PLAYING) {
         setState(() => duration = audioPlayer.duration);
@@ -170,8 +173,6 @@ class _MyHomePageState extends State<MyHomePage>
   void play() {
     audioPlayer.play(_episode.url.toString());
     setState(() {
-      values.clear();
-      values.add(1);
       position = new Duration();
       duration = new Duration();
       playerState = PlayerState.playing;
@@ -287,6 +288,8 @@ class _MyHomePageState extends State<MyHomePage>
               setState(
                 () {
                   _episode = __episode;
+                  duration = new Duration(seconds: 0);
+                  position = new Duration(seconds: 0);
                 },
               );
               if (isPlaying) {
@@ -403,7 +406,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   void _buildWaves() {
     var rng = new Random();
-    for (var i = 0; values.length <= 75; i++) {
+    for (var i = 0; values.length <= 100; i++) {
       var j = rng.nextInt(60) * 1.0;
       values.add(j);
     }
