@@ -406,7 +406,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   void _buildWaves() {
     var rng = new Random();
-    for (var i = 0; values.length <= 100; i++) {
+    for (var i = 0; values.length <= 60; i++) {
       var j = rng.nextInt(60) * 1.0;
       values.add(j);
     }
