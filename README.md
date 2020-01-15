@@ -1,6 +1,6 @@
 # FluCast
 
-Open Source Podcast app for your Show.
+Open Source Podcast app for your Show. [See it Live at Google Play Store](https://play.google.com/store/apps/details?id=br.com.luizeof.flucast_app).
 
 ## Getting Started
 
