@@ -70,11 +70,17 @@ After change the app icon, you need to run this command on app root directory:
  flutter pub run flutter_launcher_icons:main -f pubspec.yaml
 ```
 
-## Screens
+## Light Mode
+
 | Home                                         | Episodes                                         | Details                                         |
 | -------------------------------------------- | ------------------------------------------------ | ----------------------------------------------- |
 | <img align="left" src="docs/home-light.png"> | <img align="left" src="docs/episodes-light.png"> | <img align="left" src="docs/playing-light.png"> |
-| <img align="left" src="docs/home-dark.png">  | <img align="left" src="docs/episodes-dark.png">  | <img align="left" src="docs/playing-dark.png">  |
+
+## Dark Mode
+
+| Home                                        | Episodes                                        | Details                                        |
+| ------------------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| <img align="left" src="docs/home-dark.png"> | <img align="left" src="docs/episodes-dark.png"> | <img align="left" src="docs/playing-dark.png"> |
 
 ## Dependencies
 
