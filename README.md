@@ -72,9 +72,10 @@ After change the app icon, you need to run this command on app root directory:
 ```
 
 ## Screens
-| Home                                   | Episodes                                   | Details                                   |
-| -------------------------------------- | ------------------------------------------ | ----------------------------------------- |
-| <img align="left" src="docs/home.png"> | <img align="left" src="docs/episodes.png"> | <img align="left" src="docs/details.png"> |
+| Home                                         | Episodes                                         | Details                                         |
+| -------------------------------------------- | ------------------------------------------------ | ----------------------------------------------- |
+| <img align="left" src="docs/home-light.png"> | <img align="left" src="docs/episodes-light.png"> | <img align="left" src="docs/playing-light.png"> |
+| <img align="left" src="docs/home-dark.png">  | <img align="left" src="docs/episodes-dark.png">  | <img align="left" src="docs/playing-dark.png">  |
 
 ## Dependencies
 
